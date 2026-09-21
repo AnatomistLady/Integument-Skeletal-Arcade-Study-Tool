@@ -22,7 +22,7 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 1rem; display: flex; justify-content: center; min-height: 100vh; }
-    .app-shell { width: 100%; max-width: 760px; margin: auto; }
+    .app-shell { width: 100%; max-width: 780px; margin: auto; }
 
     header { text-align: center; margin-bottom: 1.25rem; }
     header h1 { font-size: 1.6rem; color: var(--accent); margin-bottom: 0.25rem; }
@@ -52,6 +52,17 @@
     .mastery-bar-fill { background: linear-gradient(90deg, var(--accent), var(--success)); height: 100%; width: 0%; transition: width 0.4s ease; }
     .mastery-stats { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-bottom: 1rem; }
 
+    /* MCQ Option Buttons */
+    .question-prompt { font-size: 1.05rem; font-weight: 600; line-height: 1.45; margin-bottom: 1rem; }
+    .options-grid { display: flex; flex-direction: column; gap: 0.6rem; }
+    .opt-btn {
+      background: var(--card-inner); border: 2px solid var(--border); color: var(--text); padding: 0.85rem 1rem;
+      border-radius: 8px; font-size: 0.95rem; text-align: left; cursor: pointer; transition: all 0.2s;
+    }
+    .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #1a2744; }
+    .opt-btn.correct { background: rgba(34, 197, 94, 0.2) !important; border-color: var(--success) !important; }
+    .opt-btn.incorrect { background: rgba(239, 68, 68, 0.2) !important; border-color: var(--danger) !important; }
+
     /* Sequence List Styles */
     .timeline-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.25rem; list-style: none; }
     .timeline-item {
@@ -72,23 +83,12 @@
     .btn-shift:hover:not(:disabled) { background: var(--accent); color: #0b132b; }
     .btn-shift:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* Quiz Option Styles */
-    .question-prompt { font-size: 1.05rem; font-weight: 600; line-height: 1.45; margin-bottom: 1rem; }
-    .options-grid { display: flex; flex-direction: column; gap: 0.6rem; }
-    .opt-btn {
-      background: var(--card-inner); border: 2px solid var(--border); color: var(--text); padding: 0.85rem 1rem;
-      border-radius: 8px; font-size: 0.95rem; text-align: left; cursor: pointer; transition: all 0.2s;
-    }
-    .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #1a2744; }
-    .opt-btn.correct { background: rgba(34, 197, 94, 0.2) !important; border-color: var(--success) !important; }
-    .opt-btn.incorrect { background: rgba(239, 68, 68, 0.2) !important; border-color: var(--danger) !important; }
-
     /* Matching Styles */
     .matching-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
     .matching-table th, .matching-table td { padding: 0.85rem; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.9rem; }
     .matching-table select {
       background: var(--card-inner); color: var(--text); border: 2px solid var(--border);
-      padding: 0.5rem; border-radius: 6px; font-size: 0.9rem; width: 100%;
+      padding: 0.5rem; border-radius: 6px; font-size: 0.9rem; width: 100%; outline: none;
     }
 
     /* Flashcard Styles */
@@ -103,7 +103,7 @@
     .side { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 1.5rem; font-size: 1.15rem; }
     .side.back { transform: rotateY(180deg); color: var(--text); }
 
-    /* Feedbacks & Controls */
+    /* Feedback & Utility */
     .feedback-box { margin-top: 1rem; padding: 0.85rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.45; display: none; }
     .feedback-box.show { display: block; }
     .feedback-box.pass { background: rgba(34, 197, 94, 0.15); border-left: 4px solid var(--success); }
@@ -115,7 +115,6 @@
     }
     .action-btn:hover { background: var(--accent-hover); }
 
-    /* Round Complete Modal */
     .round-complete { display: none; text-align: center; padding: 2rem 1rem; }
     .round-complete h2 { color: var(--accent); margin-bottom: 0.5rem; }
     .score-circle { font-size: 2.5rem; font-weight: 800; color: var(--success); margin: 1rem 0; }
@@ -125,10 +124,9 @@
   <main class="app-shell" role="main">
     <header>
       <h1>A&amp;P I Study Arcade</h1>
-      <p>Chapters 5 &amp; 6: Integumentary &amp; Skeletal Systems (Excluding Hair &amp; Nails)</p>
+      <p>Chapters 5 &amp; 6: Integumentary &amp; Skeletal Systems</p>
     </header>
 
-    <!-- Top Mode Navigation -->
     <nav class="arcade-tabs" role="tablist">
       <button class="tab-btn" id="tab-quiz" role="tab" aria-selected="true" aria-controls="panel-quiz" onclick="switchMode('quiz')">Mastery Quiz (100 MCQ)</button>
       <button class="tab-btn" id="tab-chrono" role="tab" aria-selected="false" aria-controls="panel-chrono" onclick="switchMode('chrono')">Physiological Sequence</button>
@@ -136,7 +134,7 @@
       <button class="tab-btn" id="tab-cards" role="tab" aria-selected="false" aria-controls="panel-cards" onclick="switchMode('cards')">Flashcards</button>
     </nav>
 
-    <!-- 1. MULTIPLE CHOICE QUIZ PANEL (100 MCQ, 10 PER ROUND) -->
+    <!-- 1. MULTIPLE CHOICE PANEL -->
     <section id="panel-quiz" class="panel active" role="tabpanel" aria-labelledby="tab-quiz">
       <div class="mastery-bar-wrap"><div class="mastery-bar-fill" id="quizFill"></div></div>
       <div class="mastery-stats">
@@ -163,7 +161,7 @@
         <p id="quizRoundMsg" style="margin-bottom: 1.25rem;"></p>
         <button class="action-btn" onclick="startQuizRound()">Start Next 10 Questions</button>
       </div>
-      <center><button class="action-btn" style="background:transparent; color:var(--text-muted); text-decoration:underline; font-size:0.75rem; margin-top:1rem;" onclick="resetQuizProgress()">Clear Local Quiz Storage</button></center>
+      <center><button class="action-btn" style="background:transparent; color:var(--text-muted); text-decoration:underline; font-size:0.75rem; margin-top:1rem;" onclick="resetQuizProgress()">Clear Local Storage Engine</button></center>
     </section>
 
     <!-- 2. PHYSIOLOGICAL SEQUENCE PANEL -->
@@ -235,112 +233,112 @@
 
   <script>
     /* ============================================================
-       100 MULTIPLE CHOICE QUESTIONS (NO HAIR / NO NAILS)
+       100 MULTIPLE CHOICE QUESTIONS (EXCLUDING HAIR & NAILS)
+       Options are dynamically shuffled on every presentation
        ============================================================ */
     const quizQuestions = [
-      // CHAPTER 5: INTEGUMENTARY SYSTEM (Skin Layers, Cells, Glands, Pathology, Thermoregulation)
-      { id: 1, q: "Which epidermal layer consists of a single row of actively dividing stem cells anchored to the basement membrane?", opts: ["Stratum spinosum", "Stratum basale", "Stratum corneum", "Stratum granulosum"], a: 1, exp: "The stratum basale is the deepest mitotic layer that continuously produces new keratinocytes." },
-      { id: 2, q: "The clear, translucent layer of the epidermis found exclusively in thick skin (palms and soles) is the:", opts: ["Stratum spinosum", "Stratum lucidum", "Stratum basale", "Stratum granulosum"], a: 1, exp: "The stratum lucidum consists of flat, dead cells containing eleidin and is unique to thick skin." },
-      { id: 3, q: "Which dendritic cells reside in the stratum spinosum and serve as antigen-presenting immune macrophages?", opts: ["Merkel cells", "Langerhans cells", "Melanocytes", "Keratinocytes"], a: 1, exp: "Langerhans (dendritic) cells phagocytize pathogens and activate cutaneous immune defenses." },
-      { id: 4, q: "What is the primary role of melanin pigment within epidermal keratinocytes?", opts: ["To synthesize vitamin D3", "To form an umbrella over the nucleus to protect DNA from ultraviolet radiation", "To lubricate the epidermal surface", "To provide tensile strength to dermal papillae"], a: 1, exp: "Melanin caps keratinocyte nuclei like a parasol to absorb and deflect harmful UV radiation." },
-      { id: 5, q: "Which sensory receptor cells in the stratum basale associate with free nerve endings to detect light touch?", opts: ["Pacinian corpuscles", "Merkel cells", "Meissner corpuscles", "Ruffini endings"], a: 1, exp: "Merkel (tactile) cells in the stratum basale transduce light touch sensations." },
-      { id: 6, q: "The superficial 20% of the dermis composed of loose areolar connective tissue and capillary loops is the:", opts: ["Reticular layer", "Papillary layer", "Hypodermis", "Stratum corneum"], a: 1, exp: "The papillary layer contains areolar connective tissue, dermal papillae, capillary loops, and Meissner corpuscles." },
-      { id: 7, q: "The deep 80% of the dermis composed of dense irregular connective tissue with prominent collagen bundles is the:", opts: ["Papillary layer", "Reticular layer", "Hypodermis", "Stratum basale"], a: 1, exp: "The reticular layer provides multi-directional tensile strength and elasticity to the skin." },
-      { id: 8, q: "Which subcutaneous tissue lies beneath the dermis, storing adipose for thermal insulation and shock absorption?", opts: ["Hypodermis", "Papillary dermis", "Epidermal basement membrane", "Stratum spinosum"], a: 0, exp: "The hypodermis (subcutaneous layer) anchors the cutaneous membrane to underlying muscle and fascia." },
-      { id: 9, q: "Exocrine glands that release sebum via holocrine lysis to lubricate skin and retard bacterial growth are:", opts: ["Eccrine glands", "Sebaceous glands", "Apocrine sweat glands", "Ceruminous glands"], a: 1, exp: "Sebaceous glands use holocrine secretion, where the entire cell ruptures to release lipid-rich sebum." },
-      { id: 10, q: "Coiled tubular glands distributed over most of the body that produce watery sweat for evaporative thermoregulation are:", opts: ["Apocrine sweat glands", "Eccrine sweat glands", "Sebaceous glands", "Ceruminous glands"], a: 1, exp: "Eccrine (merocrine) sweat glands secrete dilute water and electrolytes onto the skin surface to dissipate heat." },
-      { id: 11, q: "Large sweat glands in the axillary and anogenital regions that produce protein- and lipid-rich sweat broken down by bacteria into body odor are:", opts: ["Apocrine sweat glands", "Eccrine sweat glands", "Sebaceous glands", "Endocrine glands"], a: 0, exp: "Apocrine glands become functional at puberty; their viscous secretion produces odor when metabolized by bacteria." },
-      { id: 12, q: "Large, lamellated mechanoreceptors deep within the dermis and hypodermis that detect deep pressure and high-frequency vibration are:", opts: ["Meissner corpuscles", "Pacinian corpuscles", "Merkel discs", "Free nerve endings"], a: 1, exp: "Pacinian (lamellar) corpuscles consist of concentric collagenous layers enclosing a nerve terminal to detect deep pressure." },
-      { id: 13, q: "A bluish skin coloration resulting from unoxygenated hemoglobin in dermal capillary beds during systemic hypoxemia is:", opts: ["Erythema", "Cyanosis", "Jaundice", "Pallor"], a: 1, exp: "Cyanosis reflects arterial hypoxemia or peripheral vasoconstriction." },
-      { id: 14, q: "In which epidermal layer do keratinocytes begin dying, lose their nuclei, and accumulate keratohyalin and lamellar granules?", opts: ["Stratum spinosum", "Stratum granulosum", "Stratum basale", "Stratum corneum"], a: 1, exp: "The stratum granulosum marks the transition where cells die and coat their membranes in waterproofing glycolipids." },
-      { id: 15, q: "A partial-thickness burn that destroys the epidermis and part of the dermis, characterized by erythema, intense pain, and blisters, is classified as a:", opts: ["First-degree burn", "Second-degree burn", "Third-degree burn", "Fourth-degree burn"], a: 1, exp: "Second-degree burns penetrate into the dermis and form fluid-filled blisters while preserving deep sensory endings." },
-      { id: 16, q: "The most lethal form of skin cancer, originating from pigment-producing cells and characterized by the ABCDE criteria, is:", opts: ["Basal cell carcinoma", "Melanoma", "Squamous cell carcinoma", "Kaposi sarcoma"], a: 1, exp: "Melanoma originates from melanocytes and exhibits high metastatic potential." },
-      { id: 17, q: "Surgical incisions made parallel to which dermal collagen bundle patterns heal with minimal tension and scarring?", opts: ["Friction ridges", "Cleavage lines (Langer's lines)", "Epidermal pegs", "Flexure lines"], a: 1, exp: "Cleavage lines reflect the natural alignment of dense collagen fibers in the reticular dermis." },
-      { id: 18, q: "The acidic surface film (pH 4.5–5.5) produced by sweat and sebum that retards bacterial multiplication on the skin is called the:", opts: ["Glycocalyx", "Acid mantle", "Mucous barrier", "Cornified envelope"], a: 1, exp: "The acid mantle retards microbial colonization and stabilizes normal cutaneous flora." },
-      { id: 19, q: "Small egg-shaped encapsulated mechanoreceptors located in dermal papillae responsible for light touch discrimination are:", opts: ["Pacinian corpuscles", "Meissner corpuscles", "Ruffini endings", "Thermoreceptors"], a: 1, exp: "Meissner (tactile) corpuscles detect light touch in hairless skin surfaces such as fingertips." },
-      { id: 20, q: "How do cutaneous blood vessels respond when core body temperature rises above homeostatic set point?", opts: ["Vasoconstriction", "Vasodilation", "Endothelial lysis", "Collateral shunting away from the dermis"], a: 1, exp: "Vasodilation diverts warm blood to the superficial dermal plexus, radiating thermal energy out of the body." },
-      { id: 21, q: "Which fibrous, insoluble structural protein gives epidermal keratinocytes their tough, protective, water-resistant quality?", opts: ["Keratin", "Collagen", "Elastin", "Albumin"], a: 0, exp: "Keratin intermediate filaments reinforce keratinocyte cytoplasm and form the outer protective barrier." },
-      { id: 22, q: "Modified apocrine sweat glands located within the external acoustic meatus that secrete protective earwax are:", opts: ["Sebaceous glands", "Ceruminous glands", "Mammary glands", "Eccrine glands"], a: 1, exp: "Ceruminous glands produce cerumen to trap foreign particles and protect the tympanic membrane." },
-      { id: 23, q: "The outermost epidermal layer consisting of 20 to 30 sheets of dead, anucleate, cornified squames is the:", opts: ["Stratum corneum", "Stratum granulosum", "Stratum basale", "Stratum lucidum"], a: 0, exp: "The stratum corneum is composed of dead, flat, keratin-packed cells that shed continually." },
-      { id: 24, q: "An autoimmune dermatological disorder characterized by abnormally rapid epidermal mitosis leading to silvery, scaly plaques is:", opts: ["Eczema", "Psoriasis", "Vitiligo", "Impetigo"], a: 1, exp: "Psoriasis accelerates keratinocyte turnover, causing unkeratinized cells to pile up in scaly plaques." },
-      { id: 25, q: "The most common and least malignant variety of skin cancer, arising from the stratum basale and presenting as pearly nodules, is:", opts: ["Squamous cell carcinoma", "Basal cell carcinoma", "Melanoma", "Actinic keratosis"], a: 1, exp: "Basal cell carcinoma arises from the basal stratum and rarely metastasizes before detection." },
-      { id: 26, q: "Skin cancer originating from the keratinocytes of the stratum spinosum that presents as scaly, reddened papules is:", opts: ["Basal cell carcinoma", "Squamous cell carcinoma", "Melanoma", "Dermatofibroma"], a: 1, exp: "Squamous cell carcinoma arises in the stratum spinosum and can metastasize to regional lymph nodes if untreated." },
-      { id: 27, q: "Yellowish discoloration of the skin and sclera caused by elevated circulating bilirubin from hepatic or biliary disease is:", opts: ["Cyanosis", "Jaundice", "Erythema", "Pallor"], a: 1, exp: "Jaundice (icterus) occurs when bilirubin accumulates in tissue fluid due to liver or bile duct dysfunction." },
-      { id: 28, q: "A full-thickness burn extending completely through the epidermis and dermis into subcutaneous tissue, appearing charred and insensitive, is a:", opts: ["First-degree burn", "Second-degree burn", "Third-degree burn", "Superficial burn"], a: 2, exp: "Third-degree burns destroy all epidermal and dermal elements, including nerve endings, making the wound numb to pain." },
-      { id: 29, q: "The clinical diagnostic guide used by emergency physicians to calculate burned total body surface area in multiples of nine is the:", opts: ["Rule of Nines", "Glasgow Coma Scale", "ABCDE criteria", "Lund-Browder Chart"], a: 0, exp: "The Rule of Nines assigns adult body surface regions percentages divisible by 9 to estimate fluid replacement needs." },
-      { id: 30, q: "The spiny, multi-layered epidermal stratum rich in desmosomes located directly superficial to the stratum basale is the:", opts: ["Stratum spinosum", "Stratum lucidum", "Stratum corneum", "Stratum granulosum"], a: 0, exp: "The stratum spinosum provides mechanical strength through web-like bundles of intermediate pre-keratin filaments anchored to desmosomes." },
-      { id: 31, q: "A yellow-orange dietary pigment that accumulates in the stratum corneum and hypodermal adipose tissue is:", opts: ["Melanin", "Carotene", "Hemoglobin", "Bilirubin"], a: 1, exp: "Carotene is a lipid-soluble pigment found in orange and yellow vegetables that deposits in fatty layers." },
-      { id: 32, q: "Epidermal ridges supported by underlying dermal papillae that increase surface friction and create unique fingerprints are:", opts: ["Cleavage lines", "Friction ridges", "Flexure lines", "Striae"], a: 1, exp: "Friction ridges improve gripping traction on smooth surfaces and leave unique sweat print patterns." },
-      { id: 33, q: "How do dermal blood vessels respond during environmental exposure to extreme cold to conserve core body heat?", opts: ["Vasodilation", "Vasoconstriction", "Collateral rupture", "Hyperemia"], a: 1, exp: "Cutaneous vasoconstriction restricts blood flow to peripheral capillary beds to prevent heat loss from the core." },
-      { id: 34, q: "Which active steroid hormone, converted sequentially by the liver and kidneys, promotes intestinal calcium absorption?", opts: ["Calcitonin", "Calcitriol", "Thyroxine", "Aldosterone"], a: 1, exp: "Calcitriol (active 1,25-dihydroxyvitamin D3) upregulates calcium-binding protein synthesis in the small intestine." },
-      { id: 35, q: "Abnormal cutaneous redness caused by engorged dermal capillaries during inflammation, allergy, or fever is:", opts: ["Cyanosis", "Erythema", "Pallor", "Jaundice"], a: 1, exp: "Erythema results from local arteriolar dilation and hyperemia." },
-      { id: 36, q: "Unnatural skin paleness resulting from decreased cutaneous arterial perfusion during shock, fear, or anemia is:", opts: ["Erythema", "Pallor", "Cyanosis", "Hematoma"], a: 1, exp: "Pallor reflects reduced hemoglobin flow through dermal capillary beds." },
-      { id: 37, q: "A localized hematoma or bruise where blood escapes ruptured dermal vessels and pools into surrounding connective tissue is an:", opts: ["Erythema", "Ecchymosis", "Ulcer", "Abrasion"], a: 1, exp: "An ecchymosis (bruise) occurs when damaged vessels leak erythrocytes into interstitial spaces." },
-      { id: 38, q: "In the clinical ABCDE rule for evaluating pigmented cutaneous lesions, what does 'A' represent?", opts: ["Area", "Asymmetry", "Angiogenesis", "Atrophy"], a: 1, exp: "Asymmetry flags suspicious lesions where two halves of a mole do not mirror one another." },
-      { id: 39, q: "In the ABCDE rule for melanoma evaluation, what does 'B' assess?", opts: ["Basal depth", "Border irregularity", "Benign margin", "Blistering"], a: 1, exp: "Border irregularity evaluates whether lesion margins are scalloped, notched, or poorly defined." },
-      { id: 40, q: "In the ABCDE rule for melanoma evaluation, what does 'C' assess?", opts: ["Circumference", "Color variation", "Cellular grade", "Capillary flow"], a: 1, exp: "Color variation looks for inconsistent shades of tan, brown, black, or blue within the same lesion." },
-      { id: 41, q: "In the ABCDE rule for melanoma evaluation, what does 'D' represent?", opts: ["Dermis involvement", "Diameter greater than 6 mm", "Density", "Duration"], a: 1, exp: "Diameter flags lesions larger than 6 mm (the approximate diameter of a pencil eraser)." },
-      { id: 42, q: "In the ABCDE rule for melanoma evaluation, what does 'E' signify?", opts: ["Epidermal thickening", "Evolving size, shape, or elevation", "Exudate", "Erythema"], a: 1, exp: "Evolving tracks lesions that change in size, morphology, elevation, or bleeding over time." },
-      { id: 43, q: "The programmed cellular death and disintegration accompanying the outward transit of keratinocytes is called:", opts: ["Mitosis", "Keratinization (cornification)", "Endochondral calcification", "Liquefaction"], a: 1, exp: "Keratinization involves nucleus destruction, organelle dissolution, and cross-linking of keratin envelopes." },
-      { id: 44, q: "Which steroid compound in epidermal keratinocytes is converted into cholecalciferol upon exposure to UVB light?", opts: ["Cholesterol", "7-dehydrocholesterol", "Ergosterol", "Calcitonin"], a: 1, exp: "7-dehydrocholesterol in the stratum basale and spinosum is photolyzed by UVB rays into cholecalciferol (vitamin D3)." },
-      { id: 45, q: "Dermal tearing from severe overstretching that damages collagen bundles and leaves silvery-white scar lines causes:", opts: ["Friction ridges", "Striae (stretch marks)", "Flexure lines", "Cleavage scars"], a: 1, exp: "Striae occur when extreme dermis stretching tears reticular collagen, replaced by scar tissue." },
-      { id: 46, q: "Deep dermal skin folds that occur near joints where the dermis is tightly secured to deeper structures are called:", opts: ["Cleavage lines", "Flexure lines", "Friction ridges", "Dermal papillae"], a: 1, exp: "Flexure lines form over joints (such as the wrist and palm) where skin anchors firmly to deep fascia." },
-      { id: 47, q: "A superficial burn that damages only the epidermis, causing redness, swelling, and pain without blisters, is a:", opts: ["First-degree burn", "Second-degree burn", "Third-degree burn", "Fourth-degree burn"], a: 0, exp: "First-degree burns damage only the epidermis (e.g., mild sunburn) and heal without scarring." },
-      { id: 48, q: "Which intercellular anchoring junctions form extensive mechanical bridges between adjacent keratinocytes in the stratum spinosum?", opts: ["Gap junctions", "Desmosomes", "Tight junctions", "Hemidesmosomes"], a: 1, exp: "Desmosomes distribute tensile forces across the epidermal sheet, preventing cellular detachment under shear stress." },
-      { id: 49, q: "The conversion of provitamin D3 (cholecalciferol) into calcidiol occurs primarily within which internal organ?", opts: ["Kidneys", "Liver", "Spleen", "Pancreas"], a: 1, exp: "Cholecalciferol travels to the liver, where it is hydroxylated into 25-hydroxyvitamin D (calcidiol)." },
-      { id: 50, q: "Which organ performs the final hydroxylation step to generate active calcitriol [1,25-(OH)2D3]?", opts: ["Liver", "Kidneys", "Skin", "Small intestine"], a: 1, exp: "The kidneys hydroxylate calcidiol into active calcitriol under stimulation by parathyroid hormone." },
+      { id: 1, q: "Which epidermal layer consists of a single row of actively dividing stem cells anchored to the basement membrane?", opts: ["Stratum spinosum", "Stratum basale", "Stratum corneum", "Stratum granulosum"], ans: "Stratum basale", exp: "The stratum basale rests on the basement membrane and continuously produces keratinocytes via mitosis." },
+      { id: 2, q: "The clear, translucent layer of the epidermis found exclusively in thick skin (palms and soles) is the:", opts: ["Stratum spinosum", "Stratum lucidum", "Stratum basale", "Stratum granulosum"], ans: "Stratum lucidum", exp: "The stratum lucidum consists of flat, dead cells containing eleidin and is unique to thick skin." },
+      { id: 3, q: "Which dendritic cells reside in the stratum spinosum and serve as antigen-presenting immune macrophages?", opts: ["Merkel cells", "Langerhans cells", "Melanocytes", "Keratinocytes"], ans: "Langerhans cells", exp: "Langerhans (dendritic) cells phagocytize pathogens and activate cutaneous immune defenses." },
+      { id: 4, q: "What is the primary role of melanin pigment within epidermal keratinocytes?", opts: ["Synthesize vitamin D3", "Form an umbrella over the nucleus to protect DNA from ultraviolet radiation", "Lubricate the epidermal surface", "Provide tensile strength to dermal papillae"], ans: "Form an umbrella over the nucleus to protect DNA from ultraviolet radiation", exp: "Melanin caps keratinocyte nuclei like a parasol to absorb and deflect harmful UV radiation." },
+      { id: 5, q: "Which sensory receptor cells in the stratum basale associate with free nerve endings to detect light touch?", opts: ["Pacinian corpuscles", "Merkel cells", "Meissner corpuscles", "Ruffini endings"], ans: "Merkel cells", exp: "Merkel (tactile) cells in the stratum basale transduce light touch sensations." },
+      { id: 6, q: "The superficial 20% of the dermis composed of loose areolar connective tissue and capillary loops is the:", opts: ["Reticular layer", "Papillary layer", "Hypodermis", "Stratum corneum"], ans: "Papillary layer", exp: "The papillary layer contains areolar connective tissue, dermal papillae, capillary loops, and Meissner corpuscles." },
+      { id: 7, q: "The deep 80% of the dermis composed of dense irregular connective tissue with prominent collagen bundles is the:", opts: ["Papillary layer", "Reticular layer", "Hypodermis", "Stratum basale"], ans: "Reticular layer", exp: "The reticular layer provides multi-directional tensile strength and elasticity to the skin." },
+      { id: 8, q: "Which subcutaneous tissue lies beneath the dermis, storing adipose for thermal insulation and shock absorption?", opts: ["Hypodermis", "Papillary dermis", "Basement membrane", "Stratum spinosum"], ans: "Hypodermis", exp: "The hypodermis (subcutaneous layer) anchors the cutaneous membrane to underlying muscle and fascia." },
+      { id: 9, q: "Exocrine glands that release sebum via holocrine lysis to lubricate skin and retard bacterial growth are:", opts: ["Eccrine glands", "Sebaceous glands", "Apocrine sweat glands", "Ceruminous glands"], ans: "Sebaceous glands", exp: "Sebaceous glands use holocrine secretion, where the entire cell ruptures to release lipid-rich sebum." },
+      { id: 10, q: "Coiled tubular glands distributed over most of the body that produce watery sweat for evaporative thermoregulation are:", opts: ["Apocrine sweat glands", "Eccrine sweat glands", "Sebaceous glands", "Ceruminous glands"], ans: "Eccrine sweat glands", exp: "Eccrine (merocrine) sweat glands secrete dilute water and electrolytes onto the skin surface to dissipate heat." },
+      { id: 11, q: "Large sweat glands in the axillary and anogenital regions that produce protein- and lipid-rich sweat broken down by bacteria into body odor are:", opts: ["Apocrine sweat glands", "Eccrine sweat glands", "Sebaceous glands", "Endocrine glands"], ans: "Apocrine sweat glands", exp: "Apocrine glands become functional at puberty; their viscous secretion produces odor when metabolized by bacteria." },
+      { id: 12, q: "Large, lamellated mechanoreceptors deep within the dermis and hypodermis that detect deep pressure and high-frequency vibration are:", opts: ["Meissner corpuscles", "Pacinian corpuscles", "Merkel discs", "Free nerve endings"], ans: "Pacinian corpuscles", exp: "Pacinian (lamellar) corpuscles consist of concentric collagenous layers enclosing a nerve terminal to detect deep pressure." },
+      { id: 13, q: "A bluish skin coloration resulting from unoxygenated hemoglobin in dermal capillary beds during systemic hypoxemia is:", opts: ["Erythema", "Cyanosis", "Jaundice", "Pallor"], ans: "Cyanosis", exp: "Cyanosis reflects arterial hypoxemia or peripheral vasoconstriction." },
+      { id: 14, q: "In which epidermal layer do keratinocytes begin dying, lose their nuclei, and accumulate keratohyalin and lamellar granules?", opts: ["Stratum spinosum", "Stratum granulosum", "Stratum basale", "Stratum corneum"], ans: "Stratum granulosum", exp: "The stratum granulosum marks the transition where cells die and coat their membranes in waterproofing glycolipids." },
+      { id: 15, q: "A partial-thickness burn that destroys the epidermis and part of the dermis, characterized by erythema, intense pain, and blisters, is classified as a:", opts: ["First-degree burn", "Second-degree burn", "Third-degree burn", "Fourth-degree burn"], ans: "Second-degree burn", exp: "Second-degree burns penetrate into the dermis and form fluid-filled blisters while preserving deep sensory endings." },
+      { id: 16, q: "The most lethal form of skin cancer, originating from pigment-producing cells and characterized by the ABCDE criteria, is:", opts: ["Basal cell carcinoma", "Melanoma", "Squamous cell carcinoma", "Kaposi sarcoma"], ans: "Melanoma", exp: "Melanoma originates from melanocytes and exhibits high metastatic potential." },
+      { id: 17, q: "Surgical incisions made parallel to which dermal collagen bundle patterns heal with minimal tension and scarring?", opts: ["Friction ridges", "Cleavage lines (Langer's lines)", "Epidermal pegs", "Flexure lines"], ans: "Cleavage lines (Langer's lines)", exp: "Cleavage lines reflect the natural alignment of dense collagen fibers in the reticular dermis." },
+      { id: 18, q: "The acidic surface film (pH 4.5–5.5) produced by sweat and sebum that retards bacterial multiplication on the skin is called the:", opts: ["Glycocalyx", "Acid mantle", "Mucous barrier", "Cornified envelope"], ans: "Acid mantle", exp: "The acid mantle retards microbial colonization and stabilizes normal cutaneous flora." },
+      { id: 19, q: "Small egg-shaped encapsulated mechanoreceptors located in dermal papillae responsible for light touch discrimination are:", opts: ["Pacinian corpuscles", "Meissner corpuscles", "Ruffini endings", "Thermoreceptors"], ans: "Meissner corpuscles", exp: "Meissner (tactile) corpuscles detect light touch in hairless skin surfaces such as fingertips." },
+      { id: 20, q: "How do cutaneous blood vessels respond when core body temperature rises above homeostatic set point?", opts: ["Vasoconstriction", "Vasodilation", "Endothelial lysis", "Collateral shunting away from dermis"], ans: "Vasodilation", exp: "Vasodilation diverts warm blood to the superficial dermal plexus, radiating thermal energy out of the body." },
+      { id: 21, q: "Which fibrous, insoluble structural protein gives epidermal keratinocytes their tough, protective, water-resistant quality?", opts: ["Keratin", "Collagen", "Elastin", "Albumin"], ans: "Keratin", exp: "Keratin intermediate filaments reinforce keratinocyte cytoplasm and form the outer protective barrier." },
+      { id: 22, q: "Modified apocrine sweat glands located within the external acoustic meatus that secrete protective earwax are:", opts: ["Sebaceous glands", "Ceruminous glands", "Mammary glands", "Eccrine glands"], ans: "Ceruminous glands", exp: "Ceruminous glands produce cerumen to trap foreign particles and protect the tympanic membrane." },
+      { id: 23, q: "The outermost epidermal layer consisting of 20 to 30 sheets of dead, anucleate, cornified squames is the:", opts: ["Stratum corneum", "Stratum granulosum", "Stratum basale", "Stratum lucidum"], ans: "Stratum corneum", exp: "The stratum corneum is composed of dead, flat, keratin-packed cells that shed continually." },
+      { id: 24, q: "An autoimmune dermatological disorder characterized by abnormally rapid epidermal mitosis leading to silvery, scaly plaques is:", opts: ["Eczema", "Psoriasis", "Vitiligo", "Impetigo"], ans: "Psoriasis", exp: "Psoriasis accelerates keratinocyte turnover, causing unkeratinized cells to pile up in scaly plaques." },
+      { id: 25, q: "The most common and least malignant variety of skin cancer, arising from the stratum basale and presenting as pearly nodules, is:", opts: ["Squamous cell carcinoma", "Basal cell carcinoma", "Melanoma", "Actinic keratosis"], ans: "Basal cell carcinoma", exp: "Basal cell carcinoma arises from the basal stratum and rarely metastasizes before detection." },
+      { id: 26, q: "Skin cancer originating from the keratinocytes of the stratum spinosum that presents as scaly, reddened papules is:", opts: ["Basal cell carcinoma", "Squamous cell carcinoma", "Melanoma", "Dermatofibroma"], ans: "Squamous cell carcinoma", exp: "Squamous cell carcinoma arises in the stratum spinosum and can metastasize to regional lymph nodes if untreated." },
+      { id: 27, q: "Yellowish discoloration of the skin and sclera caused by elevated circulating bilirubin from hepatic or biliary disease is:", opts: ["Cyanosis", "Jaundice", "Erythema", "Pallor"], ans: "Jaundice", exp: "Jaundice (icterus) occurs when bilirubin accumulates in tissue fluid due to liver or bile duct dysfunction." },
+      { id: 28, q: "A full-thickness burn extending completely through the epidermis and dermis into subcutaneous tissue, appearing charred and insensitive, is a:", opts: ["First-degree burn", "Second-degree burn", "Third-degree burn", "Superficial burn"], ans: "Third-degree burn", exp: "Third-degree burns destroy all epidermal and dermal elements, including nerve endings, making the wound numb to pain." },
+      { id: 29, q: "The clinical diagnostic guide used by emergency physicians to calculate burned total body surface area in multiples of nine is the:", opts: ["Rule of Nines", "Glasgow Coma Scale", "ABCDE criteria", "Lund-Browder Chart"], ans: "Rule of Nines", exp: "The Rule of Nines assigns adult body surface regions percentages divisible by 9 to estimate fluid replacement needs." },
+      { id: 30, q: "The spiny, multi-layered epidermal stratum rich in desmosomes located directly superficial to the stratum basale is the:", opts: ["Stratum spinosum", "Stratum lucidum", "Stratum corneum", "Stratum granulosum"], ans: "Stratum spinosum", exp: "The stratum spinosum provides mechanical strength through web-like bundles of intermediate pre-keratin filaments anchored to desmosomes." },
+      { id: 31, q: "A yellow-orange dietary pigment that accumulates in the stratum corneum and hypodermal adipose tissue is:", opts: ["Melanin", "Carotene", "Hemoglobin", "Bilirubin"], ans: "Carotene", exp: "Carotene is a lipid-soluble pigment found in orange and yellow vegetables that deposits in fatty layers." },
+      { id: 32, q: "Epidermal ridges supported by underlying dermal papillae that increase surface friction and create unique fingerprints are:", opts: ["Cleavage lines", "Friction ridges", "Flexure lines", "Striae"], ans: "Friction ridges", exp: "Friction ridges improve gripping traction on smooth surfaces and leave unique sweat print patterns." },
+      { id: 33, q: "How do dermal blood vessels respond during environmental exposure to extreme cold to conserve core body heat?", opts: ["Vasodilation", "Vasoconstriction", "Collateral rupture", "Hyperemia"], ans: "Vasoconstriction", exp: "Cutaneous vasoconstriction restricts blood flow to peripheral capillary beds to prevent heat loss from the core." },
+      { id: 34, q: "Which active steroid hormone, converted sequentially by the liver and kidneys, promotes intestinal calcium absorption?", opts: ["Calcitonin", "Calcitriol", "Thyroxine", "Aldosterone"], ans: "Calcitriol", exp: "Calcitriol (active 1,25-dihydroxyvitamin D3) upregulates calcium-binding protein synthesis in the small intestine." },
+      { id: 35, q: "Abnormal cutaneous redness caused by engorged dermal capillaries during inflammation, allergy, or fever is:", opts: ["Cyanosis", "Erythema", "Pallor", "Jaundice"], ans: "Erythema", exp: "Erythema results from local arteriolar dilation and hyperemia." },
+      { id: 36, q: "Unnatural skin paleness resulting from decreased cutaneous arterial perfusion during shock, fear, or anemia is:", opts: ["Erythema", "Pallor", "Cyanosis", "Hematoma"], ans: "Pallor", exp: "Pallor reflects reduced hemoglobin flow through dermal capillary beds." },
+      { id: 37, q: "A localized hematoma or bruise where blood escapes ruptured dermal vessels and pools into surrounding connective tissue is an:", opts: ["Erythema", "Ecchymosis", "Ulcer", "Abrasion"], ans: "Ecchymosis", exp: "An ecchymosis (bruise) occurs when damaged vessels leak erythrocytes into interstitial spaces." },
+      { id: 38, q: "In the clinical ABCDE rule for evaluating pigmented cutaneous lesions, what does 'A' represent?", opts: ["Area", "Asymmetry", "Angiogenesis", "Atrophy"], ans: "Asymmetry", exp: "Asymmetry flags suspicious lesions where two halves of a mole do not mirror one another." },
+      { id: 39, q: "In the ABCDE rule for melanoma evaluation, what does 'B' assess?", opts: ["Basal depth", "Border irregularity", "Benign margin", "Blistering"], ans: "Border irregularity", exp: "Border irregularity evaluates whether lesion margins are scalloped, notched, or poorly defined." },
+      { id: 40, q: "In the ABCDE rule for melanoma evaluation, what does 'C' assess?", opts: ["Circumference", "Color variation", "Cellular grade", "Capillary flow"], ans: "Color variation", exp: "Color variation looks for inconsistent shades of tan, brown, black, or blue within the same lesion." },
+      { id: 41, q: "In the ABCDE rule for melanoma evaluation, what does 'D' represent?", opts: ["Dermis involvement", "Diameter greater than 6 mm", "Density", "Duration"], ans: "Diameter greater than 6 mm", exp: "Diameter flags lesions larger than 6 mm (the approximate diameter of a pencil eraser)." },
+      { id: 42, q: "In the ABCDE rule for melanoma evaluation, what does 'E' signify?", opts: ["Epidermal thickening", "Evolving size, shape, or elevation", "Exudate", "Erythema"], ans: "Evolving size, shape, or elevation", exp: "Evolving tracks lesions that change in size, morphology, elevation, or bleeding over time." },
+      { id: 43, q: "The programmed cellular death and disintegration accompanying the outward transit of keratinocytes is called:", opts: ["Mitosis", "Keratinization (cornification)", "Endochondral calcification", "Liquefaction"], ans: "Keratinization (cornification)", exp: "Keratinization involves nucleus destruction, organelle dissolution, and cross-linking of keratin envelopes." },
+      { id: 44, q: "Which steroid compound in epidermal keratinocytes is converted into cholecalciferol upon exposure to UVB light?", opts: ["Cholesterol", "7-dehydrocholesterol", "Ergosterol", "Calcitonin"], ans: "7-dehydrocholesterol", exp: "7-dehydrocholesterol in the stratum basale and spinosum is photolyzed by UVB rays into cholecalciferol (vitamin D3)." },
+      { id: 45, q: "Dermal tearing from severe overstretching that damages collagen bundles and leaves silvery-white scar lines causes:", opts: ["Friction ridges", "Striae (stretch marks)", "Flexure lines", "Cleavage scars"], ans: "Striae (stretch marks)", exp: "Striae occur when extreme dermis stretching tears reticular collagen, replaced by scar tissue." },
+      { id: 46, q: "Deep dermal skin folds that occur near joints where the dermis is tightly secured to deeper structures are called:", opts: ["Cleavage lines", "Flexure lines", "Friction ridges", "Dermal papillae"], ans: "Flexure lines", exp: "Flexure lines form over joints (such as the wrist and palm) where skin anchors firmly to deep fascia." },
+      { id: 47, q: "A superficial burn that damages only the epidermis, causing redness, swelling, and pain without blisters, is a:", opts: ["First-degree burn", "Second-degree burn", "Third-degree burn", "Fourth-degree burn"], ans: "First-degree burn", exp: "First-degree burns damage only the epidermis (e.g., mild sunburn) and heal without scarring." },
+      { id: 48, q: "Which intercellular anchoring junctions form extensive mechanical bridges between adjacent keratinocytes in the stratum spinosum?", opts: ["Gap junctions", "Desmosomes", "Tight junctions", "Hemidesmosomes"], ans: "Desmosomes", exp: "Desmosomes distribute tensile forces across the epidermal sheet, preventing cellular detachment under shear stress." },
+      { id: 49, q: "The conversion of provitamin D3 (cholecalciferol) into calcidiol occurs primarily within which internal organ?", opts: ["Kidneys", "Liver", "Spleen", "Pancreas"], ans: "Liver", exp: "Cholecalciferol travels to the liver, where it is hydroxylated into 25-hydroxyvitamin D (calcidiol)." },
+      { id: 50, q: "Which organ performs the final hydroxylation step to generate active calcitriol [1,25-(OH)2D3]?", opts: ["Liver", "Kidneys", "Skin", "Small intestine"], ans: "Kidneys", exp: "The kidneys hydroxylate calcidiol into active calcitriol under stimulation by parathyroid hormone." },
 
-      // CHAPTER 6: SKELETAL SYSTEM & BONE TISSUE (Histology, Ossification, Growth, Homeostasis, Fractures)
-      { id: 51, q: "Large multinucleated cells derived from hematopoietic monocyte lineages that resorb and dissolve bone matrix with acid and enzymes are:", opts: ["Osteoblasts", "Osteoclasts", "Osteocytes", "Osteogenic cells"], a: 1, exp: "Osteoclasts use hydrogen ion pumps and lysosomal enzymes to dissolve mineralized bone matrix." },
-      { id: 52, q: "Bone-building cells that synthesize and secrete organic osteoid and initiate matrix mineralization are:", opts: ["Osteoclasts", "Osteoblasts", "Osteocytes", "Chondrocytes"], a: 1, exp: "Osteoblasts deposit collagenous osteoid and alkaline phosphatase to drive mineralization." },
-      { id: 53, q: "Mature bone cells entrapped within lacunae that sense mechanical strain and coordinate remodeling signals are:", opts: ["Osteoblasts", "Osteocytes", "Osteogenic cells", "Chondroblasts"], a: 1, exp: "Osteocytes function as mechanosensors, directing osteoclast and osteoblast remodeling activity." },
-      { id: 54, q: "Mitotically active mesenchymal stem cells residing in the periosteum and endosteum that give rise to osteoblasts are:", opts: ["Osteoclasts", "Osteogenic cells", "Osteocytes", "Fibroblasts"], a: 1, exp: "Osteogenic (osteoprogenitor) cells divide to supply new osteoblasts for growth and repair." },
-      { id: 55, q: "The basic microscopic cylindrical structural unit of compact bone is the:", opts: ["Trabecula", "Osteon (Haversian system)", "Canaliculus", "Lacuna"], a: 1, exp: "An osteon consists of concentric lamellar cylinders organized around a neurovascular central canal." },
-      { id: 56, q: "The longitudinal channel running through the center of an osteon containing blood vessels and nerve fibers is the:", opts: ["Perforating canal", "Central canal (Haversian canal)", "Canaliculus", "Medullary cavity"], a: 1, exp: "The central canal delivers neurovascular supplies along the longitudinal axis of each osteon." },
-      { id: 57, q: "Microscopic vascular channels that run perpendicular to the long bone axis connecting periosteal vessels to central canals are:", opts: ["Perforating canals (Volkmann's canals)", "Central canals", "Canaliculi", "Medullary clefts"], a: 0, exp: "Perforating canals deliver blood from the outer periosteum inward to Haversian systems." },
-      { id: 58, q: "Microscopic fluid-filled canals radiating between lacunae allowing osteocytes to communicate via gap junctions are:", opts: ["Canaliculi", "Lamellae", "Perforating canals", "Trabeculae"], a: 0, exp: "Canaliculi house osteocyte dendritic processes, enabling nutrient and gas exchange through calcified matrix." },
-      { id: 59, q: "The branching framework of microscopic bony plates and struts that compose cancellous (spongy) bone is called:", opts: ["Osteons", "Trabeculae", "Circumferential lamellae", "Sharpey's fibers"], a: 1, exp: "Spongy bone organizes into trabecular lattices aligned with biomechanical stress vectors." },
-      { id: 60, q: "The tubular compact bone shaft of a long bone surrounding the central marrow cavity is the:", opts: ["Epiphysis", "Diaphysis", "Metaphysis", "Apophysis"], a: 1, exp: "The diaphysis is the cylindrical bone shaft providing structural leverage." },
-      { id: 61, q: "The expanded proximal and distal ends of a long bone filled internally with spongy bone and red marrow are:", opts: ["Diaphyses", "Epiphyses", "Metaphyses", "Endostea"], a: 1, exp: "Epiphyses provide broadened joint contact areas capped with articular hyaline cartilage." },
-      { id: 62, q: "The double-layered dense irregular connective tissue membrane enveloping all exterior bone surfaces except joint surfaces is the:", opts: ["Endosteum", "Periosteum", "Perichondrium", "Synovium"], a: 1, exp: "The periosteum lines bone exteriors, providing an outer fibrous sheath and an inner osteogenic layer." },
-      { id: 63, q: "The delicate cellular membrane lining the medullary cavity, trabecular spaces, and central canals of bone is the:", opts: ["Periosteum", "Endosteum", "Perichondrium", "Fascia"], a: 1, exp: "The endosteum is an active osteogenic monolayer lining all internal bone surfaces." },
-      { id: 64, q: "Tough collagen bundles anchoring the fibrous periosteum firmly into the outer circumferential lamellae are:", opts: ["Sharpey's fibers (perforating fibers)", "Trabeculae", "Canaliculi", "Elastic cords"], a: 0, exp: "Perforating (Sharpey's) fibers fuse tendons, ligaments, and periosteum into cortical bone." },
-      { id: 65, q: "The primary mineral crystal component [Ca10(PO4)6(OH)2] of bone matrix that provides compressive hardness is:", opts: ["Osteoid collagen", "Hydroxyapatite", "Calcium carbonate", "Sodium chloride"], a: 1, exp: "Hydroxyapatite crystals precipitate onto collagen scaffolds to provide compressive rigidity." },
-      { id: 66, q: "The organic component of bone extracellular matrix secreted by osteoblasts consisting mainly of type I collagen is:", opts: ["Osteoid", "Hydroxyapatite", "Ground chondroitin", "Alkaline phosphatase"], a: 0, exp: "Osteoid constitutes about one-third of bone matrix, providing tensile flexibility that resists torsional snapping." },
-      { id: 67, q: "The embryonic process where flat cranial bones and the clavicles develop directly within mesenchymal fibrous sheets is:", opts: ["Endochondral ossification", "Intramembranous ossification", "Appositional growth", "Intercalated modeling"], a: 1, exp: "Intramembranous ossification bypasses a cartilage intermediate, converting mesenchyme straight to bone." },
-      { id: 68, q: "The embryonic developmental process where long bones form by replacing a pre-existing hyaline cartilage model is:", opts: ["Intramembranous ossification", "Endochondral ossification", "Metaplastic remodeling", "Sutural fusion"], a: 1, exp: "Endochondral ossification constructs the majority of the skeleton on hyaline cartilage scaffolds." },
-      { id: 69, q: "During endochondral ossification, the primary ossification center first establishes within the:", opts: ["Center of the diaphysis", "Proximal epiphysis", "Distal epiphysis", "Articular margin"], a: 0, exp: "The primary ossification center arises in the mid-diaphysis when a periosteal bud invades calcified cartilage." },
-      { id: 70, q: "Secondary ossification centers in endochondral bone formation develop postnatally within the:", opts: ["Diaphysis", "Epiphyses", "Medullary canal", "Periosteal collar"], a: 1, exp: "Secondary ossification centers form in the bulbous epiphyses after birth." },
-      { id: 71, q: "The hyaline cartilage plate located in the metaphysis that allows growing long bones to lengthen is the:", opts: ["Articular cartilage", "Epiphyseal plate (growth plate)", "Epiphyseal line", "Endosteal plate"], a: 1, exp: "The epiphyseal plate sustains longitudinal interstitial bone growth until late adolescence." },
-      { id: 72, q: "The process by which bones increase in diameter and cortical thickness beneath the subperiosteal layer is called:", opts: ["Endochondral elongation", "Appositional growth", "Interstitial elongation", "Mineral sequestration"], a: 1, exp: "Appositional growth deposits outer subperiosteal matrix while inner osteoclasts widen the marrow cavity." },
-      { id: 73, q: "Which hormone is secreted by the parathyroid glands during hypocalcemia to stimulate osteoclast bone resorption?", opts: ["Calcitonin", "Parathyroid hormone (PTH)", "Thyroxine", "Insulin"], a: 1, exp: "PTH stimulates osteoclast activity, increases renal calcium retention, and triggers calcitriol synthesis." },
-      { id: 74, q: "Which peptide hormone secreted by thyroid parafollicular (C) cells inhibits osteoclasts during hypercalcemia?", opts: ["Parathyroid hormone", "Calcitonin", "Calcitriol", "Growth hormone"], a: 1, exp: "Calcitonin acts antagonistically to PTH, temporarily suppressing osteoclasts when plasma calcium spikes." },
-      { id: 75, q: "The physiological rule stating that bone adapts, thickens, and models dynamically in response to mechanical loads is:", opts: ["Starling's law", "Wolff's law", "The sliding filament theory", "The Law of Laplace"], a: 1, exp: "Wolff's law explains how gravitational strain and muscle pull stimulate localized cortical thickening." },
-      { id: 76, q: "A bone fracture where broken osseous ends pierce through the cutaneous skin surface is classified as an:", opts: ["Closed fracture", "Open (compound) fracture", "Greenstick fracture", "Comminuted fracture"], a: 1, exp: "Open (compound) fractures tear through the skin, introducing major risks of microbial infection (osteomyelitis)." },
-      { id: 77, q: "A bone fracture that remains completely contained beneath intact skin is a:", opts: ["Open fracture", "Closed (simple) fracture", "Compound fracture", "Segmental fracture"], a: 1, exp: "Closed (simple) fractures break the bone cortex without penetrating the skin barrier." },
-      { id: 78, q: "The initial mass of clotted blood that forms around a bone break within hours of vascular rupture is a:", opts: ["Fibrocartilaginous callus", "Fracture hematoma", "Bony callus", "Granulation plate"], a: 1, exp: "Torn periosteal and Haversian vessels hemorrhage to form a fracture hematoma that triggers inflammation." },
-      { id: 79, q: "The repair tissue consisting of collagen and cartilage that bridges a bone break in stage two of fracture healing is the:", opts: ["Bony callus", "Soft (fibrocartilaginous) callus", "Hematoma", "Osteon bed"], a: 1, exp: "Fibroblasts and chondroblasts generate an internal and external soft callus to splint bone ends." },
-      { id: 80, q: "The repair structure formed by osteoblasts replacing fibrocartilage with spongy trabeculae during stage three of bone healing is the:", opts: ["Soft callus", "Hard (bony) callus", "Hematoma", "Primary ossicle"], a: 1, exp: "The hard (bony) callus mineralizes soft fibrocartilage into woven bone over 2 to 3 months." },
-      { id: 81, q: "A systemic metabolic bone disease where bone resorption outpaces deposition, producing brittle, porous bones, is:", opts: ["Osteomyelitis", "Osteoporosis", "Osteomalacia", "Achondroplasia"], a: 1, exp: "Osteoporosis depletes bone mineral density, predisposing elderly individuals to fragility fractures." },
-      { id: 82, q: "Pediatric softening and deformation of bones resulting from vitamin D or calcium deficiency is known as:", opts: ["Osteoporosis", "Rickets", "Paget's disease", "Osteosarcoma"], a: 1, exp: "Rickets prevents epiphyseal cartilage mineralization, leading to bowed legs and skeletal deformities." },
-      { id: 83, q: "The adult form of rickets caused by inadequate mineralization of newly formed osteoid matrix is:", opts: ["Osteoporosis", "Osteomalacia", "Osteoarthritis", "Achondroplasia"], a: 1, exp: "Osteomalacia causes soft, unmineralized osteoid buildup in adults, causing bone pain and fracture risk." },
-      { id: 84, q: "An incomplete pediatric fracture where one side of the bone cortex breaks while the opposite cortex bends is a:", opts: ["Comminuted fracture", "Greenstick fracture", "Spiral fracture", "Transverse fracture"], a: 1, exp: "Greenstick fractures occur in children whose flexible organic bone matrix bends on one side rather than snapping fully." },
-      { id: 85, q: "A high-impact fracture where the bone shatters into three or more distinct fragments is classified as:", opts: ["Greenstick fracture", "Comminuted fracture", "Impacted fracture", "Pott's fracture"], a: 1, exp: "Comminuted fractures result from heavy trauma and involve fragmentation into multiple bony pieces." },
-      { id: 86, q: "The hollow central cavity within a long bone diaphysis that stores yellow adipose marrow in adults is the:", opts: ["Central canal", "Medullary cavity", "Lacunar space", "Subperiosteal fossa"], a: 1, exp: "The medullary cavity minimizes skeletal weight while functioning as a lipid storage depot." },
-      { id: 87, q: "Hematopoiesis (blood cell production) occurs primarily within which skeletal tissue in adult flat bones and epiphyses?", opts: ["Yellow bone marrow", "Red bone marrow", "Articular cartilage", "Compact periosteum"], a: 1, exp: "Red bone marrow contains pluripotent hematopoietic stem cells that generate red blood cells, white blood cells, and platelets." },
-      { id: 88, q: "Fatty connective tissue found filling the medullary cavities of adult long bones is:", opts: ["Red bone marrow", "Yellow bone marrow", "Hyaline cartilage", "Endosteal stroma"], a: 1, exp: "Yellow marrow consists primarily of adipose tissue, which can revert to red marrow during severe hemolytic stress." },
-      { id: 89, q: "Incomplete rings of bone matrix located between intact osteons representing remnants of remodeled osteons are:", opts: ["Concentric lamellae", "Interstitial lamellae", "Circumferential lamellae", "Canaliculi"], a: 1, exp: "Interstitial lamellae are remnants of older osteons partially broken down during osteoclast remodeling." },
-      { id: 90, q: "Bony layers that encircle the entire outer and inner cortical perimeter of a long bone shaft are:", opts: ["Interstitial lamellae", "Circumferential lamellae", "Concentric lamellae", "Trabeculae"], a: 1, exp: "Circumferential lamellae extend completely around the bone shaft to resist rotational twisting." },
-      { id: 91, q: "The smooth cap of hyaline cartilage covering epiphyseal articulating ends to minimize friction and absorb joint shock is:", opts: ["Elastic cartilage", "Articular cartilage", "Fibrocartilage", "Costal cartilage"], a: 1, exp: "Articular cartilage cushions synovial joint articulations and lacks a vascular perichondrium." },
-      { id: 92, q: "The epiphyseal plate zone where chondrocytes undergo rapid mitotic proliferation, stacking up like plates, is the:", opts: ["Hypertrophic zone", "Proliferative zone", "Calcification zone", "Ossification zone"], a: 1, exp: "Cells in the proliferative zone rapidly divide to push the epiphysis away from the diaphysis, lengthening bone." },
-      { id: 93, q: "The epiphyseal plate zone where older chondrocytes swell, enlarge, and digest surrounding matrix is the:", opts: ["Proliferative zone", "Hypertrophic zone", "Ossification zone", "Reserve zone"], a: 1, exp: "In the hypertrophic zone, maturing chondrocytes hypertrophy and secrete alkaline phosphatase." },
-      { id: 94, q: "The epiphyseal plate zone where minerals precipitate, killing chondrocytes and leaving calcified cartilage spicules, is the:", opts: ["Reserve zone", "Calcification zone", "Proliferative zone", "Fibrous zone"], a: 1, exp: "Matrix calcifies in the calcification zone, depriving chondrocytes of nutrients and leading to cell death." },
-      { id: 95, q: "A fracture occurring across the hyaline growth plate that risks premature arrest of longitudinal growth in children is an:", opts: ["Greenstick fracture", "Epiphyseal plate fracture (Salter-Harris)", "Colles' fracture", "Pott's fracture"], a: 1, exp: "Epiphyseal fractures can permanently halt bone elongation if the mitotic chondrocyte pool is compromised." },
-      { id: 96, q: "The adult remnant line of dense bone tissue that marks where the epiphyseal cartilage plate fused after puberty is the:", opts: ["Epiphyseal line", "Metaphyseal suture", "Articular groove", "Haversian canal"], a: 0, exp: "The epiphyseal line marks the completed synostosis of the diaphysis and epiphysis." },
-      { id: 97, q: "The flared transitional neck region of a long bone between the diaphysis and epiphysis containing the growth plate is the:", opts: ["Apophysis", "Metaphysis", "Trochanter", "Condyle"], a: 1, exp: "The metaphysis transfers compressive biomechanical forces from wide articular epiphyses down to narrow diaphyses." },
-      { id: 98, q: "Bones embedded completely within tendons to modify pull angles and decrease friction (such as the patella) are classified as:", opts: ["Flat bones", "Sesamoid bones", "Sutural bones", "Irregular bones"], a: 1, exp: "Sesamoid bones develop inside tendons under mechanical friction to protect the tendon and improve mechanical leverage." },
-      { id: 99, q: "Small fluid-filled pockets within mineralized bone and cartilage matrix that house living osteocytes or chondrocytes are:", opts: ["Canaliculi", "Lacunae", "Volkmann canals", "Perforations"], a: 1, exp: "Osteocytes and chondrocytes occupy isolated lacunae within their surrounding dense matrices." },
-      { id: 100, q: "Which anterior thoracic bone articulates with the clavicles and costal cartilages of the true ribs?", opts: ["Scapula", "Sternum", "Hyoid", "Clavicle"], a: 1, exp: "The sternum (manubrium, body, xiphoid) anchors the anterior thoracic cage and true ribs." }
+      // CHAPTER 6: SKELETAL SYSTEM & BONE TISSUE
+      { id: 51, q: "Large multinucleated cells derived from hematopoietic monocyte lineages that resorb and dissolve bone matrix with acid and enzymes are:", opts: ["Osteoblasts", "Osteoclasts", "Osteocytes", "Osteogenic cells"], ans: "Osteoclasts", exp: "Osteoclasts use hydrogen ion pumps and lysosomal enzymes to dissolve mineralized bone matrix." },
+      { id: 52, q: "Bone-building cells that synthesize and secrete organic osteoid and initiate matrix mineralization are:", opts: ["Osteoclasts", "Osteoblasts", "Osteocytes", "Chondrocytes"], ans: "Osteoblasts", exp: "Osteoblasts deposit collagenous osteoid and alkaline phosphatase to drive mineralization." },
+      { id: 53, q: "Mature bone cells entrapped within lacunae that sense mechanical strain and coordinate remodeling signals are:", opts: ["Osteoblasts", "Osteocytes", "Osteogenic cells", "Chondroblasts"], ans: "Osteocytes", exp: "Osteocytes function as mechanosensors, directing osteoclast and osteoblast remodeling activity." },
+      { id: 54, q: "Mitotically active mesenchymal stem cells residing in the periosteum and endosteum that give rise to osteoblasts are:", opts: ["Osteoclasts", "Osteogenic cells", "Osteocytes", "Fibroblasts"], ans: "Osteogenic cells", exp: "Osteogenic (osteoprogenitor) cells divide to supply new osteoblasts for growth and repair." },
+      { id: 55, q: "The basic microscopic cylindrical structural unit of compact bone is the:", opts: ["Trabecula", "Osteon (Haversian system)", "Canaliculus", "Lacuna"], ans: "Osteon (Haversian system)", exp: "An osteon consists of concentric lamellar cylinders organized around a neurovascular central canal." },
+      { id: 56, q: "The longitudinal channel running through the center of an osteon containing blood vessels and nerve fibers is the:", opts: ["Perforating canal", "Central canal (Haversian canal)", "Canaliculus", "Medullary cavity"], ans: "Central canal (Haversian canal)", exp: "The central canal delivers neurovascular supplies along the longitudinal axis of each osteon." },
+      { id: 57, q: "Microscopic vascular channels that run perpendicular to the long bone axis connecting periosteal vessels to central canals are:", opts: ["Perforating canals (Volkmann's canals)", "Central canals", "Canaliculi", "Medullary clefts"], ans: "Perforating canals (Volkmann's canals)", exp: "Perforating canals deliver blood from the outer periosteum inward to Haversian systems." },
+      { id: 58, q: "Microscopic fluid-filled canals radiating between lacunae allowing osteocytes to communicate via gap junctions are:", opts: ["Canaliculi", "Lamellae", "Perforating canals", "Trabeculae"], ans: "Canaliculi", exp: "Canaliculi house osteocyte dendritic processes, enabling nutrient and gas exchange through calcified matrix." },
+      { id: 59, q: "The branching framework of microscopic bony plates and struts that compose cancellous (spongy) bone is called:", opts: ["Osteons", "Trabeculae", "Circumferential lamellae", "Sharpey's fibers"], ans: "Trabeculae", exp: "Spongy bone organizes into trabecular lattices aligned with biomechanical stress vectors." },
+      { id: 60, q: "The tubular compact bone shaft of a long bone surrounding the central marrow cavity is the:", opts: ["Epiphysis", "Diaphysis", "Metaphysis", "Apophysis"], ans: "Diaphysis", exp: "The diaphysis is the cylindrical bone shaft providing structural leverage." },
+      { id: 61, q: "The expanded proximal and distal ends of a long bone filled internally with spongy bone and red marrow are:", opts: ["Diaphyses", "Epiphyses", "Metaphyses", "Endostea"], ans: "Epiphyses", exp: "Epiphyses provide broadened joint contact areas capped with articular hyaline cartilage." },
+      { id: 62, q: "The double-layered dense irregular connective tissue membrane enveloping all exterior bone surfaces except joint surfaces is the:", opts: ["Endosteum", "Periosteum", "Perichondrium", "Synovium"], ans: "Periosteum", exp: "The periosteum lines bone exteriors, providing an outer fibrous sheath and an inner osteogenic layer." },
+      { id: 63, q: "The delicate cellular membrane lining the medullary cavity, trabecular spaces, and central canals of bone is the:", opts: ["Periosteum", "Endosteum", "Perichondrium", "Fascia"], ans: "Endosteum", exp: "The endosteum is an active osteogenic monolayer lining all internal bone surfaces." },
+      { id: 64, q: "Tough collagen bundles anchoring the fibrous periosteum firmly into the outer circumferential lamellae are:", opts: ["Sharpey's fibers (perforating fibers)", "Trabeculae", "Canaliculi", "Elastic cords"], ans: "Sharpey's fibers (perforating fibers)", exp: "Perforating (Sharpey's) fibers fuse tendons, ligaments, and periosteum into cortical bone." },
+      { id: 65, q: "The primary mineral crystal component [Ca10(PO4)6(OH)2] of bone matrix that provides compressive hardness is:", opts: ["Osteoid collagen", "Hydroxyapatite", "Calcium carbonate", "Sodium chloride"], ans: "Hydroxyapatite", exp: "Hydroxyapatite crystals precipitate onto collagen scaffolds to provide compressive rigidity." },
+      { id: 66, q: "The organic component of bone extracellular matrix secreted by osteoblasts consisting mainly of type I collagen is:", opts: ["Osteoid", "Hydroxyapatite", "Ground chondroitin", "Alkaline phosphatase"], ans: "Osteoid", exp: "Osteoid constitutes about one-third of bone matrix, providing tensile flexibility that resists torsional snapping." },
+      { id: 67, q: "The embryonic process where flat cranial bones and the clavicles develop directly within mesenchymal fibrous sheets is:", opts: ["Endochondral ossification", "Intramembranous ossification", "Appositional growth", "Intercalated modeling"], ans: "Intramembranous ossification", exp: "Intramembranous ossification bypasses a cartilage intermediate, converting mesenchyme straight to bone." },
+      { id: 68, q: "The embryonic developmental process where long bones form by replacing a pre-existing hyaline cartilage model is:", opts: ["Intramembranous ossification", "Endochondral ossification", "Metaplastic remodeling", "Sutural fusion"], ans: "Endochondral ossification", exp: "Endochondral ossification constructs the majority of the skeleton on hyaline cartilage scaffolds." },
+      { id: 69, q: "During endochondral ossification, the primary ossification center first establishes within the:", opts: ["Center of the diaphysis", "Proximal epiphysis", "Distal epiphysis", "Articular margin"], ans: "Center of the diaphysis", exp: "The primary ossification center arises in the mid-diaphysis when a periosteal bud invades calcified cartilage." },
+      { id: 70, q: "Secondary ossification centers in endochondral bone formation develop postnatally within the:", opts: ["Diaphysis", "Epiphyses", "Medullary canal", "Periosteal collar"], ans: "Epiphyses", exp: "Secondary ossification centers form in the bulbous epiphyses after birth." },
+      { id: 71, q: "The hyaline cartilage plate located in the metaphysis that allows growing long bones to lengthen is the:", opts: ["Articular cartilage", "Epiphyseal plate (growth plate)", "Epiphyseal line", "Endosteal plate"], ans: "Epiphyseal plate (growth plate)", exp: "The epiphyseal plate sustains longitudinal interstitial bone growth until late adolescence." },
+      { id: 72, q: "The process by which bones increase in diameter and cortical thickness beneath the subperiosteal layer is called:", opts: ["Endochondral elongation", "Appositional growth", "Interstitial elongation", "Mineral sequestration"], ans: "Appositional growth", exp: "Appositional growth deposits outer subperiosteal matrix while inner osteoclasts widen the marrow cavity." },
+      { id: 73, q: "Which hormone is secreted by the parathyroid glands during hypocalcemia to stimulate osteoclast bone resorption?", opts: ["Calcitonin", "Parathyroid hormone (PTH)", "Thyroxine", "Insulin"], ans: "Parathyroid hormone (PTH)", exp: "PTH stimulates osteoclast activity, increases renal calcium retention, and triggers calcitriol synthesis." },
+      { id: 74, q: "Which peptide hormone secreted by thyroid parafollicular (C) cells inhibits osteoclasts during hypercalcemia?", opts: ["Parathyroid hormone", "Calcitonin", "Calcitriol", "Growth hormone"], ans: "Calcitonin", exp: "Calcitonin acts antagonistically to PTH, temporarily suppressing osteoclasts when plasma calcium spikes." },
+      { id: 75, q: "The physiological rule stating that bone adapts, thickens, and models dynamically in response to mechanical loads is:", opts: ["Starling's law", "Wolff's law", "The sliding filament theory", "The Law of Laplace"], ans: "Wolff's law", exp: "Wolff's law explains how gravitational strain and muscle pull stimulate localized cortical thickening." },
+      { id: 76, q: "A bone fracture where broken osseous ends pierce through the cutaneous skin surface is classified as an:", opts: ["Closed fracture", "Open (compound) fracture", "Greenstick fracture", "Comminuted fracture"], ans: "Open (compound) fracture", exp: "Open (compound) fractures tear through the skin, introducing major risks of microbial infection (osteomyelitis)." },
+      { id: 77, q: "A bone fracture that remains completely contained beneath intact skin is a:", opts: ["Open fracture", "Closed (simple) fracture", "Compound fracture", "Segmental fracture"], ans: "Closed (simple) fracture", exp: "Closed (simple) fractures break the bone cortex without penetrating the skin barrier." },
+      { id: 78, q: "The initial mass of clotted blood that forms around a bone break within hours of vascular rupture is a:", opts: ["Fibrocartilaginous callus", "Fracture hematoma", "Bony callus", "Granulation plate"], ans: "Fracture hematoma", exp: "Torn periosteal and Haversian vessels hemorrhage to form a fracture hematoma that triggers inflammation." },
+      { id: 79, q: "The repair tissue consisting of collagen and cartilage that bridges a bone break in stage two of fracture healing is the:", opts: ["Bony callus", "Soft (fibrocartilaginous) callus", "Hematoma", "Osteon bed"], ans: "Soft (fibrocartilaginous) callus", exp: "Fibroblasts and chondroblasts generate an internal and external soft callus to splint bone ends." },
+      { id: 80, q: "The repair structure formed by osteoblasts replacing fibrocartilage with spongy trabeculae during stage three of bone healing is the:", opts: ["Soft callus", "Hard (bony) callus", "Hematoma", "Primary ossicle"], ans: "Hard (bony) callus", exp: "The hard (bony) callus mineralizes soft fibrocartilage into woven bone over 2 to 3 months." },
+      { id: 81, q: "A systemic metabolic bone disease where bone resorption outpaces deposition, producing brittle, porous bones, is:", opts: ["Osteomyelitis", "Osteoporosis", "Osteomalacia", "Achondroplasia"], ans: "Osteoporosis", exp: "Osteoporosis depletes bone mineral density, predisposing elderly individuals to fragility fractures." },
+      { id: 82, q: "Pediatric softening and deformation of bones resulting from vitamin D or calcium deficiency is known as:", opts: ["Osteoporosis", "Rickets", "Paget's disease", "Osteosarcoma"], ans: "Rickets", exp: "Rickets prevents epiphyseal cartilage mineralization, leading to bowed legs and skeletal deformities." },
+      { id: 83, q: "The adult form of rickets caused by inadequate mineralization of newly formed osteoid matrix is:", opts: ["Osteoporosis", "Osteomalacia", "Osteoarthritis", "Achondroplasia"], ans: "Osteomalacia", exp: "Osteomalacia causes soft, unmineralized osteoid buildup in adults, causing bone pain and fracture risk." },
+      { id: 84, q: "An incomplete pediatric fracture where one side of the bone cortex breaks while the opposite cortex bends is a:", opts: ["Comminuted fracture", "Greenstick fracture", "Spiral fracture", "Transverse fracture"], ans: "Greenstick fracture", exp: "Greenstick fractures occur in children whose flexible organic bone matrix bends on one side rather than snapping fully." },
+      { id: 85, q: "A high-impact fracture where the bone shatters into three or more distinct fragments is classified as:", opts: ["Greenstick fracture", "Comminuted fracture", "Impacted fracture", "Pott's fracture"], ans: "Comminuted fracture", exp: "Comminuted fractures result from heavy trauma and involve fragmentation into multiple bony pieces." },
+      { id: 86, q: "The hollow central cavity within a long bone diaphysis that stores yellow adipose marrow in adults is the:", opts: ["Central canal", "Medullary cavity", "Lacunar space", "Subperiosteal fossa"], ans: "Medullary cavity", exp: "The medullary cavity minimizes skeletal weight while functioning as a lipid storage depot." },
+      { id: 87, q: "Hematopoiesis (blood cell production) occurs primarily within which skeletal tissue in adult flat bones and epiphyses?", opts: ["Yellow bone marrow", "Red bone marrow", "Articular cartilage", "Compact periosteum"], ans: "Red bone marrow", exp: "Red bone marrow contains pluripotent hematopoietic stem cells that generate red blood cells, white blood cells, and platelets." },
+      { id: 88, q: "Fatty connective tissue found filling the medullary cavities of adult long bones is:", opts: ["Red bone marrow", "Yellow bone marrow", "Hyaline cartilage", "Endosteal stroma"], ans: "Yellow bone marrow", exp: "Yellow marrow consists primarily of adipose tissue, which can revert to red marrow during severe hemolytic stress." },
+      { id: 89, q: "Incomplete rings of bone matrix located between intact osteons representing remnants of remodeled osteons are:", opts: ["Concentric lamellae", "Interstitial lamellae", "Circumferential lamellae", "Canaliculi"], ans: "Interstitial lamellae", exp: "Interstitial lamellae are remnants of older osteons partially broken down during osteoclast remodeling." },
+      { id: 90, q: "Bony layers that encircle the entire outer and inner cortical perimeter of a long bone shaft are:", opts: ["Interstitial lamellae", "Circumferential lamellae", "Concentric lamellae", "Trabeculae"], ans: "Circumferential lamellae", exp: "Circumferential lamellae extend completely around the bone shaft to resist rotational twisting." },
+      { id: 91, q: "The smooth cap of hyaline cartilage covering epiphyseal articulating ends to minimize friction and absorb joint shock is:", opts: ["Elastic cartilage", "Articular cartilage", "Fibrocartilage", "Costal cartilage"], ans: "Articular cartilage", exp: "Articular cartilage cushions synovial joint articulations and lacks a vascular perichondrium." },
+      { id: 92, q: "The epiphyseal plate zone where chondrocytes undergo rapid mitotic proliferation, stacking up like plates, is the:", opts: ["Hypertrophic zone", "Proliferative zone", "Calcification zone", "Ossification zone"], ans: "Proliferative zone", exp: "Cells in the proliferative zone rapidly divide to push the epiphysis away from the diaphysis, lengthening bone." },
+      { id: 93, q: "The epiphyseal plate zone where older chondrocytes swell, enlarge, and digest surrounding matrix is the:", opts: ["Proliferative zone", "Hypertrophic zone", "Ossification zone", "Reserve zone"], ans: "Hypertrophic zone", exp: "In the hypertrophic zone, maturing chondrocytes hypertrophy and secrete alkaline phosphatase." },
+      { id: 94, q: "The epiphyseal plate zone where minerals precipitate, killing chondrocytes and leaving calcified cartilage spicules, is the:", opts: ["Reserve zone", "Calcification zone", "Proliferative zone", "Fibrous zone"], ans: "Calcification zone", exp: "Matrix calcifies in the calcification zone, depriving chondrocytes of nutrients and leading to cell death." },
+      { id: 95, q: "A fracture occurring across the hyaline growth plate that risks premature arrest of longitudinal growth in children is an:", opts: ["Greenstick fracture", "Epiphyseal plate fracture (Salter-Harris)", "Colles' fracture", "Pott's fracture"], ans: "Epiphyseal plate fracture (Salter-Harris)", exp: "Epiphyseal fractures can permanently halt bone elongation if the mitotic chondrocyte pool is compromised." },
+      { id: 96, q: "The adult remnant line of dense bone tissue that marks where the epiphyseal cartilage plate fused after puberty is the:", opts: ["Epiphyseal line", "Metaphyseal suture", "Articular groove", "Haversian canal"], ans: "Epiphyseal line", exp: "The epiphyseal line marks the completed synostosis of the diaphysis and epiphysis." },
+      { id: 97, q: "The flared transitional neck region of a long bone between the diaphysis and epiphysis containing the growth plate is the:", opts: ["Apophysis", "Metaphysis", "Trochanter", "Condyle"], ans: "Metaphysis", exp: "The metaphysis transfers compressive biomechanical forces from wide articular epiphyses down to narrow diaphyses." },
+      { id: 98, q: "Bones embedded completely within tendons to modify pull angles and decrease friction (such as the patella) are classified as:", opts: ["Flat bones", "Sesamoid bones", "Sutural bones", "Irregular bones"], ans: "Sesamoid bones", exp: "Sesamoid bones develop inside tendons under mechanical friction to protect the tendon and improve mechanical leverage." },
+      { id: 99, q: "Small fluid-filled pockets within mineralized bone and cartilage matrix that house living osteocytes or chondrocytes are:", opts: ["Canaliculi", "Lacunae", "Volkmann canals", "Perforations"], ans: "Lacunae", exp: "Osteocytes and chondrocytes occupy isolated lacunae within their surrounding dense matrices." },
+      { id: 100, q: "Which anterior thoracic bone articulates with the clavicles and costal cartilages of the true ribs?", opts: ["Scapula", "Sternum", "Hyoid", "Clavicle"], ans: "Sternum", exp: "The sternum (manubrium, body, xiphoid) anchors the anterior thoracic cage and true ribs." }
     ];
 
     /* ============================================================
@@ -409,7 +407,7 @@
     ];
 
     /* ============================================================
-       MATCHING LAB DATA (NO HAIR / NO NAILS)
+       MATCHING LAB DATA
        ============================================================ */
     const matchingItems = [
       { desc: "Multinucleated cells derived from monocytes that dissolve bone matrix with acid and enzymes", correct: "Osteoclasts" },
@@ -423,7 +421,7 @@
     ];
 
     /* ============================================================
-       FLASHCARD DATA (NO HAIR / NO NAILS)
+       FLASHCARD DATA
        ============================================================ */
     const flashcards = [
       { term: "Osteon (Haversian System)", def: "The cylindrical structural unit of compact bone composed of concentric lamellae surrounding a vascular central canal." },
@@ -439,9 +437,9 @@
     ];
 
     /* ============================================================
-       STATE & LOCAL STORAGE LOGIC (2 CONSECUTIVE PASSES TO MASTER)
+       STORAGE & STATE LOGIC
        ============================================================ */
-    const STORAGE_KEY = 'AP1_CH5_CH6_100MCQ_ARCADE_V1';
+    const STORAGE_KEY = 'AP1_SKEL_INTEG_MCQ_ENGINE_V10';
     let arcadeData = { chrono: {}, quiz: {} };
 
     function loadStore() {
@@ -476,7 +474,6 @@
     }
 
     function updateAllProgressBars() {
-      // Quiz
       let qMaster = 0;
       quizQuestions.forEach(q => { if ((arcadeData.quiz[q.id] || 0) >= 2) qMaster++; });
       const qPct = Math.round((qMaster / quizQuestions.length) * 100);
@@ -484,7 +481,6 @@
       document.getElementById('quizMasteredText').textContent = `Mastered: ${qMaster} / ${quizQuestions.length}`;
       document.getElementById('quizPctText').textContent = `${qPct}% Mastered`;
 
-      // Chrono / Sequence
       let cMaster = 0;
       timelineChallenges.forEach(c => { if ((arcadeData.chrono[c.id] || 0) >= 2) cMaster++; });
       const cPct = Math.round((cMaster / timelineChallenges.length) * 100);
@@ -505,7 +501,7 @@
     /* ============================================================
        MODULE 1: 100 MULTIPLE CHOICE QUIZ (10 PER BURST)
        ============================================================ */
-    let qPool = [], qIdx = 0, qCorrect = 0;
+    let qPool = [], qIdx = 0, qCorrect = 0, currentDisplayOptions = [];
 
     function startQuizRound() {
       const shuffle = arr => arr.slice().sort(() => Math.random() - 0.5);
@@ -538,22 +534,25 @@
       document.getElementById('quizFeedback').textContent = '';
       document.getElementById('quizNextBtn').style.display = 'none';
 
-      q.opts.forEach((text, i) => {
+      // Dynamically shuffle options so the correct answer distributes evenly across A, B, C, D
+      currentDisplayOptions = q.opts.slice().sort(() => Math.random() - 0.5);
+
+      currentDisplayOptions.forEach((text, i) => {
         const btn = document.createElement('button');
         btn.className = 'opt-btn';
         btn.textContent = `${String.fromCharCode(65 + i)}. ${text}`;
-        btn.onclick = () => handleQuizPick(i, btn);
+        btn.onclick = () => handleQuizPick(text, btn);
         opts.appendChild(btn);
       });
     }
 
-    function handleQuizPick(picked, clickedBtn) {
+    function handleQuizPick(selectedText, clickedBtn) {
       const q = qPool[qIdx];
       const buttons = document.querySelectorAll('.opt-btn');
       const fb = document.getElementById('quizFeedback');
       buttons.forEach(b => b.disabled = true);
 
-      if (picked === q.a) {
+      if (selectedText === q.ans) {
         clickedBtn.classList.add('correct');
         fb.className = 'feedback-box show pass';
         fb.innerHTML = `<strong>✓ Correct!</strong> ${q.exp}`;
@@ -562,7 +561,10 @@
         if (arcadeData.quiz[q.id] < 2) arcadeData.quiz[q.id]++;
       } else {
         clickedBtn.classList.add('incorrect');
-        buttons[q.a].classList.add('correct');
+        // Highlight the correct option
+        buttons.forEach(b => {
+          if (b.textContent.slice(3) === q.ans) b.classList.add('correct');
+        });
         fb.className = 'feedback-box show fail';
         fb.innerHTML = `<strong>✗ Incorrect.</strong> ${q.exp}`;
         arcadeData.quiz[q.id] = 0;
@@ -578,7 +580,7 @@
         document.getElementById('quizActiveCard').style.display = 'none';
         document.getElementById('quizCompleteCard').style.display = 'block';
         document.getElementById('quizRoundScore').textContent = `${qCorrect} / 10`;
-        document.getElementById('quizRoundMsg').textContent = qCorrect >= 8 ? "Outstanding accuracy! Concepts are cementing." : "Keep cycling through to lock in the tricky pathways.";
+        document.getElementById('quizRoundMsg').textContent = qCorrect >= 8 ? "Outstanding accuracy! Terminology is cementing." : "Keep cycling through to lock in the pathways.";
       }
     }
 
