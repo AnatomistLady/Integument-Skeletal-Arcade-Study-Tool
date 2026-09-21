@@ -145,7 +145,7 @@
       <div id="quizActiveCard" class="card">
         <div class="card-top">
           <span class="round-tag" id="quizRoundTag">Question 1 of 10</span>
-          <span class="mastery-badge" id="quizBadge">Mastery: 0/2</span>
+          <span class="mastery-badge" id="quizBadge">Status: Not Mastered</span>
         </div>
         <p class="question-prompt" id="quizPrompt"></p>
         <div class="options-grid" id="quizOpts"></div>
@@ -175,7 +175,7 @@
       <div id="chronoActiveCard" class="card">
         <div class="card-top">
           <span class="round-tag" id="chronoRoundTag">Challenge 1 of 5</span>
-          <span class="mastery-badge" id="chronoBadge">Mastery: 0/2</span>
+          <span class="mastery-badge" id="chronoBadge">Status: Not Mastered</span>
         </div>
         <p style="font-size:0.95rem; color:var(--text-muted); margin-bottom:1rem;" id="chronoPrompt"></p>
         <ul class="timeline-list" id="chronoTimeline"></ul>
@@ -234,7 +234,6 @@
   <script>
     /* ============================================================
        100 MULTIPLE CHOICE QUESTIONS (EXCLUDING HAIR & NAILS)
-       Options are dynamically shuffled on every presentation
        ============================================================ */
     const quizQuestions = [
       { id: 1, q: "Which epidermal layer consists of a single row of actively dividing stem cells anchored to the basement membrane?", opts: ["Stratum spinosum", "Stratum basale", "Stratum corneum", "Stratum granulosum"], ans: "Stratum basale", exp: "The stratum basale rests on the basement membrane and continuously produces keratinocytes via mitosis." },
@@ -437,9 +436,9 @@
     ];
 
     /* ============================================================
-       STORAGE & STATE LOGIC
+       IMMEDIATE 1-POINT MASTERY STORAGE ENGINE
        ============================================================ */
-    const STORAGE_KEY = 'AP1_SKEL_INTEG_MCQ_ENGINE_V10';
+    const STORAGE_KEY = 'AP1_INTEG_SKEL_IMMEDIATE_V1';
     let arcadeData = { chrono: {}, quiz: {} };
 
     function loadStore() {
@@ -474,15 +473,16 @@
     }
 
     function updateAllProgressBars() {
+      // Direct 1-point mastery: getting it right counts as mastered immediately
       let qMaster = 0;
-      quizQuestions.forEach(q => { if ((arcadeData.quiz[q.id] || 0) >= 2) qMaster++; });
+      quizQuestions.forEach(q => { if ((arcadeData.quiz[q.id] || 0) >= 1) qMaster++; });
       const qPct = Math.round((qMaster / quizQuestions.length) * 100);
       document.getElementById('quizFill').style.width = `${qPct}%`;
       document.getElementById('quizMasteredText').textContent = `Mastered: ${qMaster} / ${quizQuestions.length}`;
       document.getElementById('quizPctText').textContent = `${qPct}% Mastered`;
 
       let cMaster = 0;
-      timelineChallenges.forEach(c => { if ((arcadeData.chrono[c.id] || 0) >= 2) cMaster++; });
+      timelineChallenges.forEach(c => { if ((arcadeData.chrono[c.id] || 0) >= 1) cMaster++; });
       const cPct = Math.round((cMaster / timelineChallenges.length) * 100);
       document.getElementById('chronoFill').style.width = `${cPct}%`;
       document.getElementById('chronoMasteredText').textContent = `Mastered: ${cMaster} / ${timelineChallenges.length}`;
@@ -505,11 +505,11 @@
 
     function startQuizRound() {
       const shuffle = arr => arr.slice().sort(() => Math.random() - 0.5);
-      const unmastered = quizQuestions.filter(q => (arcadeData.quiz[q.id] || 0) < 2);
+      const unmastered = quizQuestions.filter(q => (arcadeData.quiz[q.id] || 0) < 1);
       if (unmastered.length >= 10) {
         qPool = shuffle(unmastered).slice(0, 10);
       } else if (unmastered.length > 0) {
-        const rem = quizQuestions.filter(q => (arcadeData.quiz[q.id] || 0) >= 2);
+        const rem = quizQuestions.filter(q => (arcadeData.quiz[q.id] || 0) >= 1);
         qPool = shuffle(unmastered).concat(shuffle(rem).slice(0, 10 - unmastered.length));
       } else {
         qPool = shuffle(quizQuestions).slice(0, 10);
@@ -523,9 +523,9 @@
 
     function renderQuizQuestion() {
       const q = qPool[qIdx];
-      const lvl = arcadeData.quiz[q.id] || 0;
+      const isMastered = (arcadeData.quiz[q.id] || 0) >= 1;
       document.getElementById('quizRoundTag').textContent = `Question ${qIdx + 1} of 10`;
-      document.getElementById('quizBadge').textContent = `Mastery: ${lvl}/2 ${lvl >= 2 ? '★' : ''}`;
+      document.getElementById('quizBadge').textContent = isMastered ? 'Status: Mastered ★' : 'Status: In Progress';
       document.getElementById('quizPrompt').textContent = q.q;
 
       const opts = document.getElementById('quizOpts');
@@ -534,7 +534,7 @@
       document.getElementById('quizFeedback').textContent = '';
       document.getElementById('quizNextBtn').style.display = 'none';
 
-      // Dynamically shuffle options so the correct answer distributes evenly across A, B, C, D
+      // Shuffles choices dynamically on every single question draw
       currentDisplayOptions = q.opts.slice().sort(() => Math.random() - 0.5);
 
       currentDisplayOptions.forEach((text, i) => {
@@ -557,18 +557,20 @@
         fb.className = 'feedback-box show pass';
         fb.innerHTML = `<strong>✓ Correct!</strong> ${q.exp}`;
         qCorrect++;
-        if (!arcadeData.quiz[q.id]) arcadeData.quiz[q.id] = 0;
-        if (arcadeData.quiz[q.id] < 2) arcadeData.quiz[q.id]++;
+        arcadeData.quiz[q.id] = 1;
+        document.getElementById('quizBadge').textContent = 'Status: Mastered ★';
       } else {
         clickedBtn.classList.add('incorrect');
-        // Highlight the correct option
         buttons.forEach(b => {
           if (b.textContent.slice(3) === q.ans) b.classList.add('correct');
         });
         fb.className = 'feedback-box show fail';
         fb.innerHTML = `<strong>✗ Incorrect.</strong> ${q.exp}`;
         arcadeData.quiz[q.id] = 0;
+        document.getElementById('quizBadge').textContent = 'Status: In Progress';
       }
+      
+      // Save and force immediate live repaint of top progress bar
       saveStore();
       document.getElementById('quizNextBtn').style.display = 'inline-block';
     }
@@ -591,11 +593,11 @@
 
     function startChronologyRound() {
       const shuffle = arr => arr.slice().sort(() => Math.random() - 0.5);
-      const unmastered = timelineChallenges.filter(c => (arcadeData.chrono[c.id] || 0) < 2);
+      const unmastered = timelineChallenges.filter(c => (arcadeData.chrono[c.id] || 0) < 1);
       if (unmastered.length >= 5) {
         cPool = shuffle(unmastered).slice(0, 5);
       } else if (unmastered.length > 0) {
-        const rem = timelineChallenges.filter(c => (arcadeData.chrono[c.id] || 0) >= 2);
+        const rem = timelineChallenges.filter(c => (arcadeData.chrono[c.id] || 0) >= 1);
         cPool = shuffle(unmastered).concat(shuffle(rem).slice(0, 5 - unmastered.length));
       } else {
         cPool = shuffle(timelineChallenges).slice(0, 5);
@@ -609,9 +611,9 @@
 
     function renderChronologyChallenge() {
       const ch = cPool[cIdx];
-      const lvl = arcadeData.chrono[ch.id] || 0;
+      const isMastered = (arcadeData.chrono[ch.id] || 0) >= 1;
       document.getElementById('chronoRoundTag').textContent = `Challenge ${cIdx + 1} of 5`;
-      document.getElementById('chronoBadge').textContent = `Mastery: ${lvl}/2 ${lvl >= 2 ? '★' : ''}`;
+      document.getElementById('chronoBadge').textContent = isMastered ? 'Status: Mastered ★' : 'Status: In Progress';
       document.getElementById('chronoPrompt').textContent = `Arrange physiological sequence from start (top) to end (bottom) — [${ch.title}]:`;
 
       activeTimelineItems = ch.events.map((e, i) => ({ ...e, orig: i })).sort(() => Math.random() - 0.5);
@@ -679,12 +681,13 @@
         cCorrect++;
         fb.className = 'feedback-box show pass';
         fb.innerHTML = `<strong>✓ Perfect Sequence!</strong> ${ch.rationale}`;
-        if (!arcadeData.chrono[ch.id]) arcadeData.chrono[ch.id] = 0;
-        if (arcadeData.chrono[ch.id] < 2) arcadeData.chrono[ch.id]++;
+        arcadeData.chrono[ch.id] = 1;
+        document.getElementById('chronoBadge').textContent = 'Status: Mastered ★';
       } else {
         fb.className = 'feedback-box show fail';
         fb.innerHTML = `<strong>✗ Out of Sequence.</strong> Check red-flagged steps above. ${ch.rationale}`;
         arcadeData.chrono[ch.id] = 0;
+        document.getElementById('chronoBadge').textContent = 'Status: In Progress';
       }
       saveStore();
     }
