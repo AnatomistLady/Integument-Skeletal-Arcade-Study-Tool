@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>A&P I Study Arcade | Integumentary & Skeletal Systems</title>
+  <title>A&amp;P I Study Arcade | Integumentary &amp; Skeletal Systems</title>
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: #131b2e;
-      --card-inner: #0b1120;
-      --border: #24324d;
+      --bg: #0b132b;
+      --card-bg: #1c2541;
+      --card-inner: #0f172a;
+      --border: #3a506b;
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --accent: #38bdf8;
@@ -22,71 +22,74 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 1rem; display: flex; justify-content: center; min-height: 100vh; }
-    .app-shell { width: 100%; max-width: 780px; margin: auto; }
+    .app-shell { width: 100%; max-width: 760px; margin: auto; }
 
     header { text-align: center; margin-bottom: 1.25rem; }
     header h1 { font-size: 1.6rem; color: var(--accent); margin-bottom: 0.25rem; }
     header p { font-size: 0.9rem; color: var(--text-muted); }
 
+    /* Nav Tabs */
     .arcade-tabs { display: flex; gap: 0.5rem; justify-content: center; margin: 1rem 0 1.25rem; flex-wrap: wrap; }
     .tab-btn {
       background: var(--card-bg); color: var(--text); border: 2px solid var(--border);
       padding: 0.6rem 1rem; font-size: 0.9rem; font-weight: 700; border-radius: 8px;
       cursor: pointer; transition: all 0.2s;
     }
-    .tab-btn:hover { background-color: #1e293b; }
-    .tab-btn[aria-selected="true"] { background: var(--accent); color: #090d16; border-color: var(--accent); }
+    .tab-btn:hover { background-color: #273559; }
+    .tab-btn[aria-selected="true"] { background: var(--accent); color: #0b132b; border-color: var(--accent); }
 
     .panel { display: none; }
     .panel.active { display: block; }
 
+    /* Shared Card Styles */
     .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); margin-bottom: 1rem; }
     .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
-    .round-tag { background: #0b1120; color: var(--accent); padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid var(--border); }
+    .round-tag { background: #0f172a; color: var(--accent); padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid var(--border); }
     .mastery-badge { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
 
-    .mastery-bar-wrap { background: #050811; border-radius: 20px; height: 14px; overflow: hidden; margin: 0.5rem 0; border: 1px solid var(--border); }
+    /* Progress bar */
+    .mastery-bar-wrap { background: #090d16; border-radius: 20px; height: 14px; overflow: hidden; margin: 0.5rem 0; border: 1px solid var(--border); }
     .mastery-bar-fill { background: linear-gradient(90deg, var(--accent), var(--success)); height: 100%; width: 0%; transition: width 0.4s ease; }
     .mastery-stats { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-bottom: 1rem; }
 
-    /* Ordering Lab Styles */
-    .sequence-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.25rem; list-style: none; }
-    .sequence-item {
+    /* Sequence List Styles */
+    .timeline-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.25rem; list-style: none; }
+    .timeline-item {
       background: var(--card-inner); border: 2px solid var(--border); color: var(--text); padding: 0.75rem 0.9rem;
       border-radius: 8px; font-size: 0.92rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
       user-select: none; transition: border-color 0.2s, background-color 0.2s;
     }
-    .sequence-item.correct { border-color: var(--success) !important; background: rgba(34, 197, 94, 0.15) !important; }
-    .sequence-item.incorrect { border-color: var(--danger) !important; background: rgba(239, 68, 68, 0.15) !important; }
+    .timeline-item.correct { border-color: var(--success) !important; background: rgba(34, 197, 94, 0.15) !important; }
+    .timeline-item.incorrect { border-color: var(--danger) !important; background: rgba(239, 68, 68, 0.15) !important; }
     .item-content { display: flex; align-items: center; gap: 0.6rem; flex: 1; }
     .pos-index { font-weight: 800; color: var(--accent); font-size: 0.85rem; width: 22px; }
-    .step-label { font-size: 0.95rem; font-weight: 500; }
+    .event-label { font-size: 0.95rem; font-weight: 500; }
     .btn-shift-group { display: flex; gap: 0.35rem; }
     .btn-shift {
-      background: #1e293b; border: 1px solid var(--border); color: var(--text); padding: 0.35rem 0.6rem;
+      background: #273559; border: 1px solid var(--border); color: var(--text); padding: 0.35rem 0.6rem;
       border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: bold;
     }
-    .btn-shift:hover:not(:disabled) { background: var(--accent); color: #090d16; }
+    .btn-shift:hover:not(:disabled) { background: var(--accent); color: #0b132b; }
     .btn-shift:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* Text Entry Practice */
+    /* Quiz Option Styles */
     .question-prompt { font-size: 1.05rem; font-weight: 600; line-height: 1.45; margin-bottom: 1rem; }
-    .input-box {
-      width: 100%; background: var(--card-inner); border: 2px solid var(--border);
-      color: var(--text); padding: 0.85rem 1rem; border-radius: 8px; font-size: 1rem;
-      outline: none; margin-bottom: 0.75rem;
+    .options-grid { display: flex; flex-direction: column; gap: 0.6rem; }
+    .opt-btn {
+      background: var(--card-inner); border: 2px solid var(--border); color: var(--text); padding: 0.85rem 1rem;
+      border-radius: 8px; font-size: 0.95rem; text-align: left; cursor: pointer; transition: all 0.2s;
     }
-    .input-box:focus { border-color: var(--accent); }
-    .input-box:disabled { opacity: 0.7; }
+    .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #1a2744; }
+    .opt-btn.correct { background: rgba(34, 197, 94, 0.2) !important; border-color: var(--success) !important; }
+    .opt-btn.incorrect { background: rgba(239, 68, 68, 0.2) !important; border-color: var(--danger) !important; }
 
     /* Matching Styles */
     .matching-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
     .matching-table th, .matching-table td { padding: 0.85rem; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.9rem; }
     .matching-table select {
       background: var(--card-inner); color: var(--text); border: 2px solid var(--border);
-      padding: 0.5rem; border-radius: 6px; font-size: 0.9rem; width: 100%; outline: none;
+      padding: 0.5rem; border-radius: 6px; font-size: 0.9rem; width: 100%;
     }
-    .matching-table select:focus { border-color: var(--accent); }
 
     /* Flashcard Styles */
     .card-wrap { perspective: 1000px; min-height: 220px; cursor: pointer; }
@@ -100,19 +103,19 @@
     .side { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 1.5rem; font-size: 1.15rem; }
     .side.back { transform: rotateY(180deg); color: var(--text); }
 
-    /* Feedback & Modals */
+    /* Feedbacks & Controls */
     .feedback-box { margin-top: 1rem; padding: 0.85rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.45; display: none; }
     .feedback-box.show { display: block; }
     .feedback-box.pass { background: rgba(34, 197, 94, 0.15); border-left: 4px solid var(--success); }
     .feedback-box.fail { background: rgba(239, 68, 68, 0.15); border-left: 4px solid var(--danger); }
     .bottom-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
     .action-btn {
-      background: var(--accent); color: #090d16; border: none; padding: 0.65rem 1.4rem;
+      background: var(--accent); color: #0b132b; border: none; padding: 0.65rem 1.4rem;
       font-weight: 700; border-radius: 8px; cursor: pointer;
     }
     .action-btn:hover { background: var(--accent-hover); }
-    .reset-link { color: var(--text-muted); font-size: 0.75rem; text-decoration: underline; cursor: pointer; border: none; background: none; margin-top: 1rem; display: inline-block; }
 
+    /* Round Complete Modal */
     .round-complete { display: none; text-align: center; padding: 2rem 1rem; }
     .round-complete h2 { color: var(--accent); margin-bottom: 0.5rem; }
     .score-circle { font-size: 2.5rem; font-weight: 800; color: var(--success); margin: 1rem 0; }
@@ -122,84 +125,81 @@
   <main class="app-shell" role="main">
     <header>
       <h1>A&amp;P I Study Arcade</h1>
-      <p>Chapters 5 &amp; 6: Integumentary &amp; Skeletal Systems</p>
+      <p>Chapters 5 &amp; 6: Integumentary &amp; Skeletal Systems (Excluding Hair &amp; Nails)</p>
     </header>
 
+    <!-- Top Mode Navigation -->
     <nav class="arcade-tabs" role="tablist">
-      <button class="tab-btn" id="tab-recall" role="tab" aria-selected="true" aria-controls="panel-recall" onclick="switchMode('recall')">Active Recall Engine</button>
-      <button class="tab-btn" id="tab-order" role="tab" aria-selected="false" aria-controls="panel-order" onclick="switchMode('order')">Physiological Sequence</button>
+      <button class="tab-btn" id="tab-quiz" role="tab" aria-selected="true" aria-controls="panel-quiz" onclick="switchMode('quiz')">Mastery Quiz (100 MCQ)</button>
+      <button class="tab-btn" id="tab-chrono" role="tab" aria-selected="false" aria-controls="panel-chrono" onclick="switchMode('chrono')">Physiological Sequence</button>
       <button class="tab-btn" id="tab-match" role="tab" aria-selected="false" aria-controls="panel-match" onclick="switchMode('match')">Matching Lab</button>
       <button class="tab-btn" id="tab-cards" role="tab" aria-selected="false" aria-controls="panel-cards" onclick="switchMode('cards')">Flashcards</button>
     </nav>
 
-    <!-- 1. ACTIVE RECALL PANEL (OPEN ENTRY) -->
-    <section id="panel-recall" class="panel active" role="tabpanel" aria-labelledby="tab-recall">
-      <div class="mastery-bar-wrap"><div class="mastery-bar-fill" id="recallFill"></div></div>
+    <!-- 1. MULTIPLE CHOICE QUIZ PANEL (100 MCQ, 10 PER ROUND) -->
+    <section id="panel-quiz" class="panel active" role="tabpanel" aria-labelledby="tab-quiz">
+      <div class="mastery-bar-wrap"><div class="mastery-bar-fill" id="quizFill"></div></div>
       <div class="mastery-stats">
-        <span id="recallMasteredText">Mastered: 0 / 100</span>
-        <span id="recallPctText">0% Mastered</span>
+        <span id="quizMasteredText">Mastered: 0 / 100</span>
+        <span id="quizPctText">0% Mastered</span>
       </div>
 
-      <div id="recallActiveCard" class="card">
+      <div id="quizActiveCard" class="card">
         <div class="card-top">
-          <span class="round-tag" id="recallRoundTag">Prompt 1 of 10</span>
-          <span class="mastery-badge" id="recallBadge">Mastery: 0/2</span>
+          <span class="round-tag" id="quizRoundTag">Question 1 of 10</span>
+          <span class="mastery-badge" id="quizBadge">Mastery: 0/2</span>
         </div>
-        <p class="question-prompt" id="recallPrompt"></p>
-        <form onsubmit="handleRecallSubmit(event)" autocomplete="off">
-          <label for="recallInput" class="visually-hidden" style="display:none;">Your Answer</label>
-          <input type="text" id="recallInput" class="input-box" placeholder="Type anatomical term or concept..." autofocus />
-          <div class="bottom-bar">
-            <button type="submit" class="action-btn" id="recallSubmitBtn">Check Term</button>
-            <button type="button" class="action-btn" id="recallNextBtn" style="display:none;" onclick="nextRecallQuestion()">Continue</button>
-          </div>
-        </form>
-        <div class="feedback-box" id="recallFeedback" role="alert"></div>
+        <p class="question-prompt" id="quizPrompt"></p>
+        <div class="options-grid" id="quizOpts"></div>
+        <div class="feedback-box" id="quizFeedback" role="alert"></div>
+        <div class="bottom-bar" style="justify-content: flex-end;">
+          <button class="action-btn" id="quizNextBtn" style="display:none;" onclick="nextQuizQuestion()">Continue</button>
+        </div>
       </div>
 
-      <div id="recallCompleteCard" class="card round-complete">
-        <h2>10-Term Round Complete!</h2>
-        <div class="score-circle" id="recallRoundScore">0/10</div>
-        <p id="recallRoundMsg" style="margin-bottom: 1.25rem;"></p>
-        <button class="action-btn" onclick="startRecallRound()">Start Next 10 Prompts</button>
+      <div id="quizCompleteCard" class="card round-complete">
+        <h2>10-Question Round Complete!</h2>
+        <div class="score-circle" id="quizRoundScore">0/10</div>
+        <p id="quizRoundMsg" style="margin-bottom: 1.25rem;"></p>
+        <button class="action-btn" onclick="startQuizRound()">Start Next 10 Questions</button>
       </div>
-      <center><button class="reset-link" onclick="resetEngineProgress()">Clear Engine Local Memory</button></center>
+      <center><button class="action-btn" style="background:transparent; color:var(--text-muted); text-decoration:underline; font-size:0.75rem; margin-top:1rem;" onclick="resetQuizProgress()">Clear Local Quiz Storage</button></center>
     </section>
 
-    <!-- 2. PHYSIOLOGICAL ORDERING LAB -->
-    <section id="panel-order" class="panel" role="tabpanel" aria-labelledby="tab-order">
-      <div class="mastery-bar-wrap"><div class="mastery-bar-fill" id="orderFill"></div></div>
+    <!-- 2. PHYSIOLOGICAL SEQUENCE PANEL -->
+    <section id="panel-chrono" class="panel" role="tabpanel" aria-labelledby="tab-chrono">
+      <div class="mastery-bar-wrap"><div class="mastery-bar-fill" id="chronoFill"></div></div>
       <div class="mastery-stats">
-        <span id="orderMasteredText">Mastered: 0 / 10</span>
-        <span id="orderPctText">0% Mastered</span>
+        <span id="chronoMasteredText">Mastered: 0 / 5</span>
+        <span id="chronoPctText">0% Mastered</span>
       </div>
 
-      <div id="orderActiveCard" class="card">
+      <div id="chronoActiveCard" class="card">
         <div class="card-top">
-          <span class="round-tag" id="orderRoundTag">Challenge 1 of 5</span>
-          <span class="mastery-badge" id="orderBadge">Mastery: 0/2</span>
+          <span class="round-tag" id="chronoRoundTag">Challenge 1 of 5</span>
+          <span class="mastery-badge" id="chronoBadge">Mastery: 0/2</span>
         </div>
-        <p style="font-size:0.95rem; color:var(--text-muted); margin-bottom:1rem;" id="orderPrompt"></p>
-        <ul class="sequence-list" id="orderList"></ul>
-        <div class="feedback-box" id="orderFeedback" role="alert"></div>
+        <p style="font-size:0.95rem; color:var(--text-muted); margin-bottom:1rem;" id="chronoPrompt"></p>
+        <ul class="timeline-list" id="chronoTimeline"></ul>
+        <div class="feedback-box" id="chronoFeedback" role="alert"></div>
         <div class="bottom-bar">
-          <button class="action-btn" id="orderSubmitBtn" onclick="checkOrderSequence()">Check Sequence</button>
-          <button class="action-btn" id="orderNextBtn" style="display:none;" onclick="nextOrderChallenge()">Continue</button>
+          <button class="action-btn" id="chronoSubmitBtn" onclick="checkChronology()">Submit Order</button>
+          <button class="action-btn" id="chronoNextBtn" style="display:none;" onclick="nextChronology()">Continue</button>
         </div>
       </div>
 
-      <div id="orderCompleteCard" class="card round-complete">
-        <h2>Ordering Set Complete!</h2>
-        <div class="score-circle" id="orderRoundScore">0/5</div>
-        <p id="orderRoundMsg" style="margin-bottom: 1.25rem;"></p>
-        <button class="action-btn" onclick="startOrderRound()">Start Next Set</button>
+      <div id="chronoCompleteCard" class="card round-complete">
+        <h2>Sequence Set Complete!</h2>
+        <div class="score-circle" id="chronoRoundScore">0/5</div>
+        <p id="chronoRoundMsg" style="margin-bottom: 1.25rem;"></p>
+        <button class="action-btn" onclick="startChronologyRound()">Start Next Set</button>
       </div>
     </section>
 
-    <!-- 3. MATCHING LAB -->
+    <!-- 3. MATCHING PANEL -->
     <section id="panel-match" class="panel" role="tabpanel" aria-labelledby="tab-match">
       <div class="card">
-        <h2 style="font-size:1.15rem; margin-bottom:0.75rem; color:var(--accent);">Skeletal &amp; Integumentary Structural Matching</h2>
+        <h2 style="font-size:1.15rem; margin-bottom:0.75rem; color:var(--accent);">Tissue &amp; Structural Matching Lab</h2>
         <table class="matching-table">
           <thead><tr><th style="width:60%;">Anatomical Description / Role</th><th style="width:40%;">Target Term</th></tr></thead>
           <tbody id="matchingBody"></tbody>
@@ -235,182 +235,181 @@
 
   <script>
     /* ============================================================
-       100 ACTIVE RECALL DATA BANK (NO MULTIPLE CHOICE)
-       Accepts primary answer or acceptable variants
+       100 MULTIPLE CHOICE QUESTIONS (NO HAIR / NO NAILS)
        ============================================================ */
-    const recallBank = [
-      // CHAPTER 5: INTEGUMENTARY SYSTEM (1-50)
-      { id: 1, prompt: "The deepest epidermal layer consisting of a single row of actively dividing stem cells:", ans: ["stratum basale", "basale", "stratum germinativum"], expl: "The stratum basale rests on the basement membrane and continuously produces keratinocytes via mitosis." },
-      { id: 2, prompt: "The clear, translucent layer of the epidermis found exclusively in thick skin (palms and soles):", ans: ["stratum lucidum", "lucidum"], expl: "The stratum lucidum consists of flat, dead cells containing eleidin and is unique to thick skin." },
-      { id: 3, prompt: "Dendritic cells of the stratum spinosum that serve as antigen-presenting immune macrophages:", ans: ["langerhans cells", "dendritic cells", "langerhans"], expl: "Langerhans (epidermal dendritic) cells originate in bone marrow and activate cutaneous immune defenses." },
-      { id: 4, prompt: "The brown-black or yellow-red polymer pigment synthesized in basal cells to shield nuclear DNA from UV damage:", ans: ["melanin"], expl: "Melanosomes transfer melanin to basal keratinocytes, clustering over nuclei like a protective parasol." },
-      { id: 5, prompt: "Sensory receptor cells in the stratum basale associated with a disc-like sensory nerve ending for light touch detection:", ans: ["merkel cells", "merkel", "tactile cells"], expl: "Merkel (tactile) cells respond to light tactile sensations and pressure at the epidermal-dermal junction." },
-      { id: 6, prompt: "The superficial, loose areolar connective tissue layer making up approximately 20% of the dermis:", ans: ["papillary layer", "papillary dermis"], expl: "The papillary layer contains dermal papillae, capillary loops, free nerve endings, and Meissner corpuscles." },
-      { id: 7, prompt: "The deeper, thicker layer of the dermis composed of dense irregular connective tissue with coarse collagen bundles:", ans: ["reticular layer", "reticular dermis"], expl: "The reticular layer provides multi-directional tensile strength and elastic recoil to the skin." },
-      { id: 8, prompt: "Subcutaneous tissue beneath the dermis rich in adipose and areolar tissue that anchors skin to underlying muscle:", ans: ["hypodermis", "subcutaneous layer", "superficial fascia"], expl: "The hypodermis (subcutis) provides thermal insulation, energy storage, and mechanical shock absorption." },
-      { id: 9, prompt: "Exocrine glands producing oily sebum through holocrine lysis to lubricate skin and hair:", ans: ["sebaceous glands", "sebaceous"], expl: "Sebaceous glands use holocrine secretion, where mature cells burst entirely to release lipid-rich sebum." },
-      { id: 10, prompt: "Abundant coiled tubular sweat glands that produce watery, hypoosmotic perspiration for thermoregulation:", ans: ["eccrine sweat glands", "eccrine glands", "merocrine sweat glands"], expl: "Eccrine (merocrine) sweat glands secrete dilute water and electrolytes onto the skin surface for evaporative cooling." },
-      { id: 11, prompt: "Large sweat glands located in the axillary and anogenital regions that secrete protein- and lipid-rich sweat broken down by bacteria into body odor:", ans: ["apocrine sweat glands", "apocrine glands"], expl: "Apocrine glands empty into hair follicles starting at puberty; their secretions cause odor when metabolized by skin bacteria." },
-      { id: 12, prompt: "Large, lamellated mechanoreceptors deep in the dermis and hypodermis that detect deep pressure and high-frequency vibration:", ans: ["pacinian corpuscles", "lamellar corpuscles", "pacinian corpuscle", "lamellated corpuscles"], expl: "Pacinian (lamellar) corpuscles consist of concentric collagen layers wrapped around a sensory nerve terminal." },
-      { id: 13, prompt: "A bluish coloration of the skin and mucous membranes indicating arterial hypoxemia or poor perfusion:", ans: ["cyanosis"], expl: "Cyanosis reflects a high concentration of deoxygenated hemoglobin in dermal capillary beds." },
-      { id: 14, prompt: "The inactive steroid precursor synthesized in epidermal keratinocytes from 7-dehydrocholesterol by UV light:", ans: ["cholecalciferol", "vitamin d3", "vitamin d"], expl: "Cholecalciferol is transported to the liver and then kidneys to be converted into the active hormone calcitriol." },
-      { id: 15, prompt: "The epidermal stratum where cells flatten, lose nuclei, and accumulate keratohyalin and lamellar lipid granules:", ans: ["stratum granulosum", "granulosum"], expl: "The stratum granulosum marks the boundary between metabolically active deep layers and dead superficial layers." },
-      { id: 16, prompt: "A partial-thickness burn destroying the entire epidermis and part of the dermis, characterized by pain, erythema, and blisters:", ans: ["second-degree burn", "second degree burn"], expl: "Second-degree burns damage dermal vessels and sensory endings, prompting fluid collection in blisters." },
-      { id: 17, prompt: "The most lethal form of skin cancer, originating from pigment-producing cells and characterized by the ABCDE criteria:", ans: ["melanoma", "malignant melanoma"], expl: "Melanoma arises from melanocytes, possesses high metastatic potential, and requires early surgical excision." },
-      { id: 18, prompt: "Predominant orientations of dense collagen bundles in the reticular dermis that dictate optimal surgical incisions:", ans: ["cleavage lines", "langer lines", "langer's lines", "lines of cleavage"], expl: "Incisions made parallel to cleavage lines experience less mechanical pull and heal with minimal scar formation." },
-      { id: 19, prompt: "The acidic surface film (pH 4.5–5.5) formed by sweat and sebum that retards cutaneous bacterial colonization:", ans: ["acid mantle"], expl: "The acid mantle inhibits pathogen growth and supports normal resident cutaneous flora." },
-      { id: 20, prompt: "Encapsulated tactile receptors located in dermal papillae responsible for detecting light touch and low-frequency vibration:", ans: ["meissner corpuscles", "tactile corpuscles", "meissner's corpuscles"], expl: "Meissner (tactile) corpuscles are concentrated in hairless skin surfaces such as fingertips and lips." },
-      { id: 21, prompt: "The vascular response in dermal capillary networks when core body temperature rises:", ans: ["vasodilation", "vasodilate", "dilation"], expl: "Dermal vasodilation diverts warm core blood toward the surface to radiate thermal energy into the air." },
-      { id: 22, prompt: "The tough, fibrous intracellular protein that accumulates in keratinocytes to give the epidermis its water-resistant durability:", ans: ["keratin"], expl: "Keratin intermediate filaments reinforce cytoskeletons, protecting skin from friction, water loss, and entry of microbes." },
-      { id: 23, prompt: "The modified apocrine glands in the external acoustic meatus that synthesize earwax:", ans: ["ceruminous glands", "ceruminous"], expl: "Ceruminous glands secrete cerumen, which combines with sebum to lubricate the tympanic membrane and trap debris." },
-      { id: 24, prompt: "The outermost epidermal layer consisting of 20 to 30 sheets of dead, anucleate keratinized squames that continually desquamate:", ans: ["stratum corneum", "corneum"], expl: "The stratum corneum acts as the physical, chemical, and biological barrier separating viable tissue from the external environment." },
-      { id: 25, prompt: "An autoimmune dermatological disorder marked by accelerated keratinocyte turnover leading to silvery, scaly plaques:", ans: ["psoriasis"], expl: "Psoriasis compresses epidermal turnover time from weeks to days, yielding unkeratinized, silvery desquamating plaques." },
-      { id: 26, prompt: "Smooth muscle bundles attached to hair follicles that contract during cold or emotional stress to erect hairs ('goosebumps'):", ans: ["arrector pili", "arrector pili muscle"], expl: "Arrector pili muscles are innervated by the sympathetic nervous system and pull hair follicles vertical upon contraction." },
-      { id: 27, prompt: "The most common and least malignant variety of skin cancer, arising from the stratum basale and appearing as shiny, pearly nodules:", ans: ["basal cell carcinoma"], expl: "Basal cell carcinoma rarely metastasizes but can cause local tissue invasion if untreated." },
-      { id: 28, prompt: "Skin cancer originating from keratinocytes of the stratum spinosum, presenting as scaly, reddened papules on sun-exposed areas:", ans: ["squamous cell carcinoma"], expl: "Squamous cell carcinoma arises in the spinosum layer and can metastasize to regional lymph nodes if neglected." },
-      { id: 29, prompt: "The clinical yellow pigmentation of skin and sclera caused by elevated circulating bilirubin from hepatic or biliary dysfunction:", ans: ["jaundice", "icterus"], expl: "Jaundice indicates bilirubin accumulation when the liver fails to excrete bile pigments efficiently into the digestive tract." },
-      { id: 30, prompt: "A full-thickness burn extending through all epidermal and dermal layers, leaving charred, leathery, and insensitive tissue:", ans: ["third-degree burn", "third degree burn"], expl: "Third-degree burns destroy cutaneous sensory receptors; nerve endings are damaged, so the burn site itself is insensate." },
-      { id: 31, prompt: "The diagnostic system used by clinicians to estimate the percentage of total body surface area injured in burns using multiples of nine:", ans: ["rule of nines", "the rule of nines"], expl: "The Rule of Nines subdivides adult surface regions into 9% or 18% sections to guide fluid resuscitation protocols." },
-      { id: 32, prompt: "The thick crescent-shaped white area located at the proximal base of the nail body over the underlying nail matrix:", ans: ["lunula"], expl: "The lunula appears white because the thickened underlying nail matrix blocks view of deeper dermal capillaries." },
-      { id: 33, prompt: "The narrow band of epidermis extending onto the nail plate at the proximal nail fold, commonly called the cuticle:", ans: ["eponychium", "cuticle"], expl: "The eponychium seals the margin between the skin and nail plate to prevent microbial invasion into the nail bed." },
-      { id: 34, prompt: "The spiny, multi-layered epidermal stratum rich in desmosomes situated directly superficial to the stratum basale:", ans: ["stratum spinosum", "spinosum"], expl: "Shrinkage artifact during tissue preparation pulls cells apart except at desmosomal junctions, giving a spiny appearance." },
-      { id: 35, prompt: "Yellow-orange dietary pigment that accumulates in the stratum corneum and subcutaneous adipose tissue:", ans: ["carotene"], expl: "Carotene is a fat-soluble precursor to vitamin A that provides skin a yellowish hue when ingested in large quantities." },
-      { id: 36, prompt: "Dermal ridges underlying epidermal ridges on fingers and toes that increase gripping friction and establish fingerprints:", ans: ["friction ridges", "dermal ridges"], expl: "Friction ridges amplify shear stress grip on smooth surfaces and leave unique sweat impressions (fingerprints)." },
-      { id: 37, prompt: "The vascular response of dermal vessels upon exposure to freezing ambient temperatures to conserve core body heat:", ans: ["vasoconstriction", "constriction"], expl: "Vasoconstriction shunts heated blood away from cutaneous capillaries inward toward visceral organs." },
-      { id: 38, prompt: "Active vitamin D, converted by the liver and kidneys, which stimulates calcium absorption in the small intestine:", ans: ["calcitriol"], expl: "1,25-dihydroxyvitamin D (calcitriol) binds intestinal receptors to upregulate calbindin synthesis and calcium uptake." },
-      { id: 39, prompt: "The specialized region of actively dividing epithelial cells at the base of the hair follicle responsible for hair growth:", ans: ["hair matrix", "matrix"], expl: "The hair matrix contains germinative cells derived from the stratum basale surrounding the dermal papilla." },
-      { id: 40, prompt: "The region of a hair projecting completely above the cutaneous epidermal surface:", ans: ["hair shaft", "shaft"], expl: "The hair shaft consists of completely dead, fully keratinized epithelial cells divided into medulla, cortex, and cuticle." },
-      { id: 41, prompt: "The deep, expanded base of the hair follicle situated within the dermis or hypodermis:", ans: ["hair bulb", "bulb"], expl: "The hair bulb encloses the vascular hair papilla, providing capillary blood to dividing germinative matrix cells." },
-      { id: 42, prompt: "Redness of the skin caused by engorged dermal capillaries during inflammation, allergy, or fever:", ans: ["erythema"], expl: "Erythema occurs when inflammatory mediators cause local arteriolar vasodilation and hyperemia." },
-      { id: 43, prompt: "Unnatural skin paleness resulting from reduced cutaneous blood flow due to emotional shock, anemia, or hypotension:", ans: ["pallor"], expl: "Pallor reflects diminished hemoglobin perfusion through dermal vascular plexuses." },
-      { id: 44, prompt: "A localized hematoma or bruise where blood escapes damaged dermal vessels to pool in surrounding connective tissue:", ans: ["ecchymosis", "hematoma", "bruise"], expl: "Ecchymoses change color over time as macrophages degrade hemoglobin into biliverdin and bilirubin." },
-      { id: 45, prompt: "The thickened epidermal layer situated directly underneath the free edge of the nail plate:", ans: ["hyponychium"], expl: "The hyponychium forms a waterproof and pathogen-resistant barrier under the free distal edge of the nail." },
-      { id: 46, prompt: "Fine, unpigmented, short downy hair covering the fetus and body surfaces of children and adult females:", ans: ["vellus hair", "vellus"], expl: "Vellus hairs are soft, fine hairs lacking a medulla, distinct from coarser terminal hairs." },
-      { id: 47, prompt: "Coarse, pigmented, long hair found on the scalp, eyebrows, and adult axillary and pubic regions:", ans: ["terminal hair", "terminal"], expl: "Terminal hair growth is responsive to androgens during and after puberty." },
-      { id: 48, prompt: "The clinical ABCDE rule parameter evaluating irregular margins and notched edges in suspected melanomas:", ans: ["border", "border irregularity"], expl: "The 'B' in the ABCDE melanoma protocol evaluates whether lesion margins are smooth or uneven and notched." },
-      { id: 49, prompt: "The ABCDE rule criterion evaluating whether a pigmented skin lesion exceeds 6 mm in width:", ans: ["diameter"], expl: "The 'D' in ABCDE warns that melanomas often measure larger than 6 mm (the diameter of a pencil eraser)." },
-      { id: 50, prompt: "The process of programmed cell death accompanying the accumulation of keratin as cells migrate outward toward the surface:", ans: ["keratinization", "cornification"], expl: "Keratinization involves nucleus destruction, organelle breakdown, and structural envelope assembly." },
+    const quizQuestions = [
+      // CHAPTER 5: INTEGUMENTARY SYSTEM (Skin Layers, Cells, Glands, Pathology, Thermoregulation)
+      { id: 1, q: "Which epidermal layer consists of a single row of actively dividing stem cells anchored to the basement membrane?", opts: ["Stratum spinosum", "Stratum basale", "Stratum corneum", "Stratum granulosum"], a: 1, exp: "The stratum basale is the deepest mitotic layer that continuously produces new keratinocytes." },
+      { id: 2, q: "The clear, translucent layer of the epidermis found exclusively in thick skin (palms and soles) is the:", opts: ["Stratum spinosum", "Stratum lucidum", "Stratum basale", "Stratum granulosum"], a: 1, exp: "The stratum lucidum consists of flat, dead cells containing eleidin and is unique to thick skin." },
+      { id: 3, q: "Which dendritic cells reside in the stratum spinosum and serve as antigen-presenting immune macrophages?", opts: ["Merkel cells", "Langerhans cells", "Melanocytes", "Keratinocytes"], a: 1, exp: "Langerhans (dendritic) cells phagocytize pathogens and activate cutaneous immune defenses." },
+      { id: 4, q: "What is the primary role of melanin pigment within epidermal keratinocytes?", opts: ["To synthesize vitamin D3", "To form an umbrella over the nucleus to protect DNA from ultraviolet radiation", "To lubricate the epidermal surface", "To provide tensile strength to dermal papillae"], a: 1, exp: "Melanin caps keratinocyte nuclei like a parasol to absorb and deflect harmful UV radiation." },
+      { id: 5, q: "Which sensory receptor cells in the stratum basale associate with free nerve endings to detect light touch?", opts: ["Pacinian corpuscles", "Merkel cells", "Meissner corpuscles", "Ruffini endings"], a: 1, exp: "Merkel (tactile) cells in the stratum basale transduce light touch sensations." },
+      { id: 6, q: "The superficial 20% of the dermis composed of loose areolar connective tissue and capillary loops is the:", opts: ["Reticular layer", "Papillary layer", "Hypodermis", "Stratum corneum"], a: 1, exp: "The papillary layer contains areolar connective tissue, dermal papillae, capillary loops, and Meissner corpuscles." },
+      { id: 7, q: "The deep 80% of the dermis composed of dense irregular connective tissue with prominent collagen bundles is the:", opts: ["Papillary layer", "Reticular layer", "Hypodermis", "Stratum basale"], a: 1, exp: "The reticular layer provides multi-directional tensile strength and elasticity to the skin." },
+      { id: 8, q: "Which subcutaneous tissue lies beneath the dermis, storing adipose for thermal insulation and shock absorption?", opts: ["Hypodermis", "Papillary dermis", "Epidermal basement membrane", "Stratum spinosum"], a: 0, exp: "The hypodermis (subcutaneous layer) anchors the cutaneous membrane to underlying muscle and fascia." },
+      { id: 9, q: "Exocrine glands that release sebum via holocrine lysis to lubricate skin and retard bacterial growth are:", opts: ["Eccrine glands", "Sebaceous glands", "Apocrine sweat glands", "Ceruminous glands"], a: 1, exp: "Sebaceous glands use holocrine secretion, where the entire cell ruptures to release lipid-rich sebum." },
+      { id: 10, q: "Coiled tubular glands distributed over most of the body that produce watery sweat for evaporative thermoregulation are:", opts: ["Apocrine sweat glands", "Eccrine sweat glands", "Sebaceous glands", "Ceruminous glands"], a: 1, exp: "Eccrine (merocrine) sweat glands secrete dilute water and electrolytes onto the skin surface to dissipate heat." },
+      { id: 11, q: "Large sweat glands in the axillary and anogenital regions that produce protein- and lipid-rich sweat broken down by bacteria into body odor are:", opts: ["Apocrine sweat glands", "Eccrine sweat glands", "Sebaceous glands", "Endocrine glands"], a: 0, exp: "Apocrine glands become functional at puberty; their viscous secretion produces odor when metabolized by bacteria." },
+      { id: 12, q: "Large, lamellated mechanoreceptors deep within the dermis and hypodermis that detect deep pressure and high-frequency vibration are:", opts: ["Meissner corpuscles", "Pacinian corpuscles", "Merkel discs", "Free nerve endings"], a: 1, exp: "Pacinian (lamellar) corpuscles consist of concentric collagenous layers enclosing a nerve terminal to detect deep pressure." },
+      { id: 13, q: "A bluish skin coloration resulting from unoxygenated hemoglobin in dermal capillary beds during systemic hypoxemia is:", opts: ["Erythema", "Cyanosis", "Jaundice", "Pallor"], a: 1, exp: "Cyanosis reflects arterial hypoxemia or peripheral vasoconstriction." },
+      { id: 14, q: "In which epidermal layer do keratinocytes begin dying, lose their nuclei, and accumulate keratohyalin and lamellar granules?", opts: ["Stratum spinosum", "Stratum granulosum", "Stratum basale", "Stratum corneum"], a: 1, exp: "The stratum granulosum marks the transition where cells die and coat their membranes in waterproofing glycolipids." },
+      { id: 15, q: "A partial-thickness burn that destroys the epidermis and part of the dermis, characterized by erythema, intense pain, and blisters, is classified as a:", opts: ["First-degree burn", "Second-degree burn", "Third-degree burn", "Fourth-degree burn"], a: 1, exp: "Second-degree burns penetrate into the dermis and form fluid-filled blisters while preserving deep sensory endings." },
+      { id: 16, q: "The most lethal form of skin cancer, originating from pigment-producing cells and characterized by the ABCDE criteria, is:", opts: ["Basal cell carcinoma", "Melanoma", "Squamous cell carcinoma", "Kaposi sarcoma"], a: 1, exp: "Melanoma originates from melanocytes and exhibits high metastatic potential." },
+      { id: 17, q: "Surgical incisions made parallel to which dermal collagen bundle patterns heal with minimal tension and scarring?", opts: ["Friction ridges", "Cleavage lines (Langer's lines)", "Epidermal pegs", "Flexure lines"], a: 1, exp: "Cleavage lines reflect the natural alignment of dense collagen fibers in the reticular dermis." },
+      { id: 18, q: "The acidic surface film (pH 4.5–5.5) produced by sweat and sebum that retards bacterial multiplication on the skin is called the:", opts: ["Glycocalyx", "Acid mantle", "Mucous barrier", "Cornified envelope"], a: 1, exp: "The acid mantle retards microbial colonization and stabilizes normal cutaneous flora." },
+      { id: 19, q: "Small egg-shaped encapsulated mechanoreceptors located in dermal papillae responsible for light touch discrimination are:", opts: ["Pacinian corpuscles", "Meissner corpuscles", "Ruffini endings", "Thermoreceptors"], a: 1, exp: "Meissner (tactile) corpuscles detect light touch in hairless skin surfaces such as fingertips." },
+      { id: 20, q: "How do cutaneous blood vessels respond when core body temperature rises above homeostatic set point?", opts: ["Vasoconstriction", "Vasodilation", "Endothelial lysis", "Collateral shunting away from the dermis"], a: 1, exp: "Vasodilation diverts warm blood to the superficial dermal plexus, radiating thermal energy out of the body." },
+      { id: 21, q: "Which fibrous, insoluble structural protein gives epidermal keratinocytes their tough, protective, water-resistant quality?", opts: ["Keratin", "Collagen", "Elastin", "Albumin"], a: 0, exp: "Keratin intermediate filaments reinforce keratinocyte cytoplasm and form the outer protective barrier." },
+      { id: 22, q: "Modified apocrine sweat glands located within the external acoustic meatus that secrete protective earwax are:", opts: ["Sebaceous glands", "Ceruminous glands", "Mammary glands", "Eccrine glands"], a: 1, exp: "Ceruminous glands produce cerumen to trap foreign particles and protect the tympanic membrane." },
+      { id: 23, q: "The outermost epidermal layer consisting of 20 to 30 sheets of dead, anucleate, cornified squames is the:", opts: ["Stratum corneum", "Stratum granulosum", "Stratum basale", "Stratum lucidum"], a: 0, exp: "The stratum corneum is composed of dead, flat, keratin-packed cells that shed continually." },
+      { id: 24, q: "An autoimmune dermatological disorder characterized by abnormally rapid epidermal mitosis leading to silvery, scaly plaques is:", opts: ["Eczema", "Psoriasis", "Vitiligo", "Impetigo"], a: 1, exp: "Psoriasis accelerates keratinocyte turnover, causing unkeratinized cells to pile up in scaly plaques." },
+      { id: 25, q: "The most common and least malignant variety of skin cancer, arising from the stratum basale and presenting as pearly nodules, is:", opts: ["Squamous cell carcinoma", "Basal cell carcinoma", "Melanoma", "Actinic keratosis"], a: 1, exp: "Basal cell carcinoma arises from the basal stratum and rarely metastasizes before detection." },
+      { id: 26, q: "Skin cancer originating from the keratinocytes of the stratum spinosum that presents as scaly, reddened papules is:", opts: ["Basal cell carcinoma", "Squamous cell carcinoma", "Melanoma", "Dermatofibroma"], a: 1, exp: "Squamous cell carcinoma arises in the stratum spinosum and can metastasize to regional lymph nodes if untreated." },
+      { id: 27, q: "Yellowish discoloration of the skin and sclera caused by elevated circulating bilirubin from hepatic or biliary disease is:", opts: ["Cyanosis", "Jaundice", "Erythema", "Pallor"], a: 1, exp: "Jaundice (icterus) occurs when bilirubin accumulates in tissue fluid due to liver or bile duct dysfunction." },
+      { id: 28, q: "A full-thickness burn extending completely through the epidermis and dermis into subcutaneous tissue, appearing charred and insensitive, is a:", opts: ["First-degree burn", "Second-degree burn", "Third-degree burn", "Superficial burn"], a: 2, exp: "Third-degree burns destroy all epidermal and dermal elements, including nerve endings, making the wound numb to pain." },
+      { id: 29, q: "The clinical diagnostic guide used by emergency physicians to calculate burned total body surface area in multiples of nine is the:", opts: ["Rule of Nines", "Glasgow Coma Scale", "ABCDE criteria", "Lund-Browder Chart"], a: 0, exp: "The Rule of Nines assigns adult body surface regions percentages divisible by 9 to estimate fluid replacement needs." },
+      { id: 30, q: "The spiny, multi-layered epidermal stratum rich in desmosomes located directly superficial to the stratum basale is the:", opts: ["Stratum spinosum", "Stratum lucidum", "Stratum corneum", "Stratum granulosum"], a: 0, exp: "The stratum spinosum provides mechanical strength through web-like bundles of intermediate pre-keratin filaments anchored to desmosomes." },
+      { id: 31, q: "A yellow-orange dietary pigment that accumulates in the stratum corneum and hypodermal adipose tissue is:", opts: ["Melanin", "Carotene", "Hemoglobin", "Bilirubin"], a: 1, exp: "Carotene is a lipid-soluble pigment found in orange and yellow vegetables that deposits in fatty layers." },
+      { id: 32, q: "Epidermal ridges supported by underlying dermal papillae that increase surface friction and create unique fingerprints are:", opts: ["Cleavage lines", "Friction ridges", "Flexure lines", "Striae"], a: 1, exp: "Friction ridges improve gripping traction on smooth surfaces and leave unique sweat print patterns." },
+      { id: 33, q: "How do dermal blood vessels respond during environmental exposure to extreme cold to conserve core body heat?", opts: ["Vasodilation", "Vasoconstriction", "Collateral rupture", "Hyperemia"], a: 1, exp: "Cutaneous vasoconstriction restricts blood flow to peripheral capillary beds to prevent heat loss from the core." },
+      { id: 34, q: "Which active steroid hormone, converted sequentially by the liver and kidneys, promotes intestinal calcium absorption?", opts: ["Calcitonin", "Calcitriol", "Thyroxine", "Aldosterone"], a: 1, exp: "Calcitriol (active 1,25-dihydroxyvitamin D3) upregulates calcium-binding protein synthesis in the small intestine." },
+      { id: 35, q: "Abnormal cutaneous redness caused by engorged dermal capillaries during inflammation, allergy, or fever is:", opts: ["Cyanosis", "Erythema", "Pallor", "Jaundice"], a: 1, exp: "Erythema results from local arteriolar dilation and hyperemia." },
+      { id: 36, q: "Unnatural skin paleness resulting from decreased cutaneous arterial perfusion during shock, fear, or anemia is:", opts: ["Erythema", "Pallor", "Cyanosis", "Hematoma"], a: 1, exp: "Pallor reflects reduced hemoglobin flow through dermal capillary beds." },
+      { id: 37, q: "A localized hematoma or bruise where blood escapes ruptured dermal vessels and pools into surrounding connective tissue is an:", opts: ["Erythema", "Ecchymosis", "Ulcer", "Abrasion"], a: 1, exp: "An ecchymosis (bruise) occurs when damaged vessels leak erythrocytes into interstitial spaces." },
+      { id: 38, q: "In the clinical ABCDE rule for evaluating pigmented cutaneous lesions, what does 'A' represent?", opts: ["Area", "Asymmetry", "Angiogenesis", "Atrophy"], a: 1, exp: "Asymmetry flags suspicious lesions where two halves of a mole do not mirror one another." },
+      { id: 39, q: "In the ABCDE rule for melanoma evaluation, what does 'B' assess?", opts: ["Basal depth", "Border irregularity", "Benign margin", "Blistering"], a: 1, exp: "Border irregularity evaluates whether lesion margins are scalloped, notched, or poorly defined." },
+      { id: 40, q: "In the ABCDE rule for melanoma evaluation, what does 'C' assess?", opts: ["Circumference", "Color variation", "Cellular grade", "Capillary flow"], a: 1, exp: "Color variation looks for inconsistent shades of tan, brown, black, or blue within the same lesion." },
+      { id: 41, q: "In the ABCDE rule for melanoma evaluation, what does 'D' represent?", opts: ["Dermis involvement", "Diameter greater than 6 mm", "Density", "Duration"], a: 1, exp: "Diameter flags lesions larger than 6 mm (the approximate diameter of a pencil eraser)." },
+      { id: 42, q: "In the ABCDE rule for melanoma evaluation, what does 'E' signify?", opts: ["Epidermal thickening", "Evolving size, shape, or elevation", "Exudate", "Erythema"], a: 1, exp: "Evolving tracks lesions that change in size, morphology, elevation, or bleeding over time." },
+      { id: 43, q: "The programmed cellular death and disintegration accompanying the outward transit of keratinocytes is called:", opts: ["Mitosis", "Keratinization (cornification)", "Endochondral calcification", "Liquefaction"], a: 1, exp: "Keratinization involves nucleus destruction, organelle dissolution, and cross-linking of keratin envelopes." },
+      { id: 44, q: "Which steroid compound in epidermal keratinocytes is converted into cholecalciferol upon exposure to UVB light?", opts: ["Cholesterol", "7-dehydrocholesterol", "Ergosterol", "Calcitonin"], a: 1, exp: "7-dehydrocholesterol in the stratum basale and spinosum is photolyzed by UVB rays into cholecalciferol (vitamin D3)." },
+      { id: 45, q: "Dermal tearing from severe overstretching that damages collagen bundles and leaves silvery-white scar lines causes:", opts: ["Friction ridges", "Striae (stretch marks)", "Flexure lines", "Cleavage scars"], a: 1, exp: "Striae occur when extreme dermis stretching tears reticular collagen, replaced by scar tissue." },
+      { id: 46, q: "Deep dermal skin folds that occur near joints where the dermis is tightly secured to deeper structures are called:", opts: ["Cleavage lines", "Flexure lines", "Friction ridges", "Dermal papillae"], a: 1, exp: "Flexure lines form over joints (such as the wrist and palm) where skin anchors firmly to deep fascia." },
+      { id: 47, q: "A superficial burn that damages only the epidermis, causing redness, swelling, and pain without blisters, is a:", opts: ["First-degree burn", "Second-degree burn", "Third-degree burn", "Fourth-degree burn"], a: 0, exp: "First-degree burns damage only the epidermis (e.g., mild sunburn) and heal without scarring." },
+      { id: 48, q: "Which intercellular anchoring junctions form extensive mechanical bridges between adjacent keratinocytes in the stratum spinosum?", opts: ["Gap junctions", "Desmosomes", "Tight junctions", "Hemidesmosomes"], a: 1, exp: "Desmosomes distribute tensile forces across the epidermal sheet, preventing cellular detachment under shear stress." },
+      { id: 49, q: "The conversion of provitamin D3 (cholecalciferol) into calcidiol occurs primarily within which internal organ?", opts: ["Kidneys", "Liver", "Spleen", "Pancreas"], a: 1, exp: "Cholecalciferol travels to the liver, where it is hydroxylated into 25-hydroxyvitamin D (calcidiol)." },
+      { id: 50, q: "Which organ performs the final hydroxylation step to generate active calcitriol [1,25-(OH)2D3]?", opts: ["Liver", "Kidneys", "Skin", "Small intestine"], a: 1, exp: "The kidneys hydroxylate calcidiol into active calcitriol under stimulation by parathyroid hormone." },
 
-      // CHAPTER 6: SKELETAL SYSTEM & BONE TISSUE (51-100)
-      { id: 51, prompt: "Large multinucleated bone-resorbing cells derived from hematopoietic monocyte lineages that dissolve mineral matrix with hydrochloric acid:", ans: ["osteoclasts", "osteoclast"], expl: "Osteoclasts utilize a ruffled border to pump hydrogen ions and lysosomal enzymes, solubilizing hydroxyapatite." },
-      { id: 52, prompt: "Bone-forming cells that synthesize, secrete, and mineralize the organic extracellular osteoid matrix:", ans: ["osteoblasts", "osteoblast"], expl: "Osteoblasts produce type I collagen and alkaline phosphatase, initiating calcium phosphate nucleation." },
-      { id: 53, prompt: "Mature osteocytes trapped within lacunae that monitor mechanical load and coordinate remodeling signals via canaliculi:", ans: ["osteocytes", "osteocyte"], expl: "Osteocytes function as mechanosensory transducers, coordinating osteoblast and osteoclast activity." },
-      { id: 54, prompt: "Mesenchymal stem cells located in the periosteum and endosteum that divide to generate new osteoblasts:", ans: ["osteogenic cells", "osteoprogenitor cells", "osteoprogenitors"], expl: "Osteogenic cells maintain mitotic competence to supply osteoblast populations during growth and repair." },
-      { id: 55, prompt: "The cylindrical structural and functional unit of mature compact bone:", ans: ["osteon", "haversian system"], expl: "Osteons consist of concentric lamellar cylinders organized parallel to the long axis of compressive mechanical load." },
-      { id: 56, prompt: "The central longitudinal canal running down the axis of an osteon containing neurovascular vessels:", ans: ["central canal", "haversian canal"], expl: "Central canals convey capillaries, venules, and unmyelinated nerve fibers throughout compact bone." },
-      { id: 57, prompt: "Vascular canals that run perpendicular to the long bone axis, connecting periosteal vessels to central canals:", ans: ["perforating canals", "volkmann's canals", "volkmann canals"], expl: "Perforating (Volkmann's) canals transmit neurovascular bundles from the external periosteum into central canals." },
-      { id: 58, prompt: "Microscopic fluid-filled channels radiating between lacunae allowing osteocyte dendritic processes to communicate via gap junctions:", ans: ["canaliculi", "canaliculus"], expl: "Canaliculi permit nutrient, waste, and signaling exchange across the mineralized, impermeable bone matrix." },
-      { id: 59, prompt: "The branching framework of microscopic bony struts and plates that compose cancellous (spongy) bone:", ans: ["trabeculae", "trabecula"], expl: "Trabeculae align precisely along lines of mechanical stress to dissipate compressive and tensile forces." },
-      { id: 60, prompt: "The tubular diaphysis of a long bone surrounding the central medullary marrow cavity:", ans: ["diaphysis", "shaft"], expl: "The diaphysis provides substantial leverage and structural resistance to bending stresses along the bone axis." },
-      { id: 61, prompt: "The expanded proximal and distal ends of a long bone, largely filled with internal spongy bone housing red marrow:", ans: ["epiphysis", "epiphyses"], expl: "Epiphyses provide broadened joint contact areas covered with articular hyaline cartilage." },
-      { id: 62, prompt: "The double-layered dense irregular connective tissue membrane enveloping all exterior bone surfaces except articular joints:", ans: ["periosteum"], expl: "The periosteum possesses an outer fibrous protective layer and an inner osteogenic layer for appositional growth." },
-      { id: 63, prompt: "The delicate cellular membrane lining the medullary cavity, trabecular surfaces, and central canals of bone:", ans: ["endosteum"], expl: "The endosteum is an active osteogenic and osteolytic cellular monolayer lining internal bone spaces." },
-      { id: 64, prompt: "Thick collagen bundles anchoring the fibrous periosteum firmly into the outer circumferential lamellae:", ans: ["perforating fibers", "sharpey's fibers", "sharpey fibers"], expl: "Perforating (Sharpey's) fibers fuse tendon and ligament insertions directly into the calcified cortex." },
-      { id: 65, prompt: "The primary mineral salt crystal component [Ca10(PO4)6(OH)2] of bone that imparts compressive hardness:", ans: ["hydroxyapatite", "calcium phosphate"], expl: "Hydroxyapatite crystallization within collagen matrices provides compressive rigidity and prevents bending." },
-      { id: 66, prompt: "The unmineralized organic matrix synthesized by osteoblasts consisting predominantly of type I collagen fibers and ground substance:", ans: ["osteoid"], expl: "Osteoid constitutes roughly one-third of the matrix, providing tensile flexibility that resists torsional snapping." },
-      { id: 67, prompt: "The bone formation mechanism in which flat cranial bones and the clavicles develop directly within embryonic mesenchymal membranes:", ans: ["intramembranous ossification", "intramembranous"], expl: "Intramembranous ossification bypasses a cartilage scaffold, condensing mesenchymal tissue directly into bone." },
-      { id: 68, prompt: "The embryonic process in which long bones form by gradually replacing a pre-existing hyaline cartilage model:", ans: ["endochondral ossification", "endochondral"], expl: "Endochondral ossification builds most skeleton elements via primary and secondary ossification centers in cartilage." },
-      { id: 69, prompt: "The specific anatomical site within the mid-diaphysis of a cartilage model where endochondral bone formation begins:", ans: ["primary ossification center"], expl: "The primary ossification center arises when a periosteal bud invades calcified cartilage in the central shaft." },
-      { id: 70, prompt: "Ossification centers that develop within the epiphyses of long bones after birth:", ans: ["secondary ossification centers", "secondary ossification center"], expl: "Secondary centers form in the bulbous bone ends, leaving hyaline cartilage only at epiphyseal plates and joint caps." },
-      { id: 71, prompt: "The layer of hyaline cartilage in the metaphysis of growing long bones where interstitial lengthening occurs:", ans: ["epiphyseal plate", "growth plate", "physis"], expl: "The epiphyseal plate sustains longitudinal bone growth until late adolescence, when it calcifies into the epiphyseal line." },
-      { id: 72, prompt: "The process through which bones increase in diameter and cortical thickness beneath the subperiosteal osteogenic layer:", ans: ["appositional growth"], expl: "Appositional growth pairs subperiosteal osteoblast matrix deposition with endosteal osteoclast resorption." },
-      { id: 73, prompt: "The parathyroid hormone that stimulates osteoclast activity to elevate blood calcium levels during hypocalcemia:", ans: ["parathyroid hormone", "pth"], expl: "PTH increases osteoclast bone resorption, promotes renal calcium conservation, and activates calcitriol." },
-      { id: 74, prompt: "The thyroid peptide hormone secreted by parafollicular (C) cells that suppresses osteoclast resorption during hypercalcemia:", ans: ["calcitonin"], expl: "Calcitonin acts antagonistically to PTH, temporarily dampening osteoclastic bone resorption when plasma calcium spikes." },
-      { id: 75, prompt: "The physiological rule stating that bone adapts, thickens, and models dynamically in direct response to mechanical loads placed on it:", ans: ["wolff's law", "wolffs law"], expl: "Wolff's law explains why athletic training, gravity, and muscle pull induce regional cortical thickening." },
-      { id: 76, prompt: "A bone fracture where the broken ends pierce through the surrounding skin tissue, creating an infection risk:", ans: ["open fracture", "compound fracture"], expl: "Open (compound) fractures expose internal marrow and mineralized matrix directly to external bacterial contamination." },
-      { id: 77, prompt: "A fracture that does not breach the protective cutaneous boundary of the skin:", ans: ["closed fracture", "simple fracture"], expl: "Closed (simple) fractures remain contained within subcutaneous tissues, minimizing osteomyelitis risks." },
-      { id: 78, prompt: "The initial vascular mass of clotted blood that forms around a bone fracture within hours of vascular tearing:", ans: ["hematoma", "fracture hematoma"], expl: "Fracture hematoma formation triggers inflammatory cytokine release, recruiting macrophages and mesenchymal repair cells." },
-      { id: 79, prompt: "The fibrocartilaginous repair tissue that bridges a fracture gap during the second stage of bone healing:", ans: ["soft callus", "fibrocartilaginous callus", "cartilage callus"], expl: "Chondroblasts and fibroblasts deposit an internal and external soft callus to stabilize bone ends." },
-      { id: 80, prompt: "The bony structural callus formed by osteoblasts replacing fibrocartilage through endochondral processes during stage three of fracture repair:", ans: ["hard callus", "bony callus"], expl: "The bony (hard) callus converts temporary fibrocartilage into woven trabecular bone over several months." },
-      { id: 81, prompt: "A systemic metabolic bone disease where bone resorption outpaces bone deposition, leading to brittle, porous bones:", ans: ["osteoporosis"], expl: "Osteoporosis reduces bone mineral density and elevates risk for hip, wrist, and vertebral compression fractures." },
-      { id: 82, prompt: "The pediatric softening and demineralization of bone caused by a deficiency in vitamin D or calcium:", ans: ["rickets"], expl: "Rickets prevents epiphyseal plate mineralization, resulting in bowlegged deformities and widened metaphyses." },
-      { id: 83, prompt: "The adult equivalent of rickets caused by inadequate mineralization of newly formed osteoid matrix:", ans: ["osteomalacia"], expl: "Osteomalacia causes diffuse bone pain, muscular weakness, and increased micro-fracture vulnerability." },
-      { id: 84, prompt: "An incomplete pediatric fracture where one side of the bone shaft breaks while the opposite cortex bends, like a green twig:", ans: ["greenstick fracture", "greenstick"], expl: "Greenstick fractures occur commonly in children due to high organic collagen elasticity relative to mineral density." },
-      { id: 85, prompt: "A fracture where the bone breaks into three or more distinct fragments:", ans: ["comminuted fracture", "comminuted"], expl: "Comminuted fractures result from high-energy impacts and often require open internal reduction and fixation." },
-      { id: 86, prompt: "The hollow central space within the long bone diaphysis that contains fat-storing yellow bone marrow in adults:", ans: ["medullary cavity", "marrow cavity"], expl: "The medullary cavity minimizes skeletal weight without sacrificing structural resistance to bending stresses." },
-      { id: 87, prompt: "Site of hematopoiesis found within the trabecular spaces of spongy bone in the pelvis, ribs, sternum, and proximal epiphyses:", ans: ["red bone marrow", "red marrow", "myeloid tissue"], expl: "Red bone marrow contains pluripotent hematopoietic stem cells producing erythrocytes, leukocytes, and platelets." },
-      { id: 88, prompt: "Connective tissue inside the adult medullary cavity composed primarily of adipose cells for triglyceride storage:", ans: ["yellow bone marrow", "yellow marrow"], expl: "Yellow bone marrow can revert to hematopoietically active red marrow during prolonged severe hemolytic anemia." },
-      { id: 89, prompt: "Incomplete circular rings of bone matrix located between intact osteons, representing remnants of remodeled systems:", ans: ["interstitial lamellae", "interstitial lamella"], expl: "Interstitial lamellae fill spaces between osteons, representing past osteons partially degraded during remodeling." },
-      { id: 90, prompt: "Concentric bony layers that extend around the entire outer and inner circumference of the compact bone shaft:", ans: ["circumferential lamellae"], expl: "Circumferential lamellae resist torsional twisting forces along the entire outer and inner cortical perimeter." },
-      { id: 91, prompt: "The hyaline cartilage cap covering articulating epiphyseal ends to reduce friction and absorb shock:", ans: ["articular cartilage"], expl: "Articular cartilage lacks a perichondrium and receives nutrients strictly via synovial fluid diffusion." },
-      { id: 92, prompt: "The epiphyseal growth plate zone where chondrocytes undergo rapid mitotic proliferation, forming stacks like coins:", ans: ["proliferative zone", "zone of proliferation"], expl: "Cells in the proliferative zone divide rapidly, pushing the epiphysis away from the diaphysis to lengthen bone." },
-      { id: 93, prompt: "The epiphyseal growth plate zone where older chondrocytes hypertrophy, enlarge, and absorb surrounding matrix:", ans: ["hypertrophic zone", "zone of hypertrophy"], expl: "Hypertrophying chondrocytes enlarge lacunae and prepare the cartilage matrix for calcification." },
-      { id: 94, prompt: "The epiphyseal plate zone where dying chondrocytes leave calcified matrix struts invaded by osteogenic vessels:", ans: ["calcification zone", "zone of calcification"], expl: "Minerals precipitate in the calcification zone, killing chondrocytes and leaving scaffolds for osteoblasts." },
-      { id: 95, prompt: "The anterior bone of the thoracic cage that articulates with the true ribs and clavicles, divided into manubrium, body, and xiphoid:", ans: ["sternum"], expl: "The sternum protects anterior thoracic organs and anchors costal cartilages." },
-      { id: 96, prompt: "A fracture occurring across the epiphyseal cartilage plate that can prematurely halt longitudinal bone growth in children:", ans: ["epiphyseal fracture", "salter-harris fracture"], expl: "Epiphyseal plate fractures require precise reduction to avoid premature growth arrest or angular limb deformities." },
-      { id: 97, prompt: "The adult remnant line of calcified compact bone that replaces the hyaline growth plate after skeletal maturity:", ans: ["epiphyseal line"], expl: "The epiphyseal line marks the completed synostosis of the diaphysis with the epiphysis." },
-      { id: 98, prompt: "The transitional flared region of a long bone between the diaphysis and epiphysis containing the growth plate:", ans: ["metaphysis"], expl: "The metaphysis transfers compressive biomechanical forces from wide articular epiphyses down to narrow diaphyses." },
-      { id: 99, prompt: "Bones embedded entirely within tendons to alter pull angles and reduce mechanical friction (e.g., patella):", ans: ["sesamoid bones", "sesamoid"], expl: "Sesamoid bones protect tendons from excessive wear and provide biomechanical lever advantages around joint axes." },
-      { id: 100, prompt: "The small spaces or cavities within the mineralized bone or cartilage matrix that enclose osteocytes or chondrocytes:", ans: ["lacunae", "lacuna"], expl: "Each lacuna contains a single osteocyte surrounded by tissue fluid, connected via microscopic canaliculi." }
+      // CHAPTER 6: SKELETAL SYSTEM & BONE TISSUE (Histology, Ossification, Growth, Homeostasis, Fractures)
+      { id: 51, q: "Large multinucleated cells derived from hematopoietic monocyte lineages that resorb and dissolve bone matrix with acid and enzymes are:", opts: ["Osteoblasts", "Osteoclasts", "Osteocytes", "Osteogenic cells"], a: 1, exp: "Osteoclasts use hydrogen ion pumps and lysosomal enzymes to dissolve mineralized bone matrix." },
+      { id: 52, q: "Bone-building cells that synthesize and secrete organic osteoid and initiate matrix mineralization are:", opts: ["Osteoclasts", "Osteoblasts", "Osteocytes", "Chondrocytes"], a: 1, exp: "Osteoblasts deposit collagenous osteoid and alkaline phosphatase to drive mineralization." },
+      { id: 53, q: "Mature bone cells entrapped within lacunae that sense mechanical strain and coordinate remodeling signals are:", opts: ["Osteoblasts", "Osteocytes", "Osteogenic cells", "Chondroblasts"], a: 1, exp: "Osteocytes function as mechanosensors, directing osteoclast and osteoblast remodeling activity." },
+      { id: 54, q: "Mitotically active mesenchymal stem cells residing in the periosteum and endosteum that give rise to osteoblasts are:", opts: ["Osteoclasts", "Osteogenic cells", "Osteocytes", "Fibroblasts"], a: 1, exp: "Osteogenic (osteoprogenitor) cells divide to supply new osteoblasts for growth and repair." },
+      { id: 55, q: "The basic microscopic cylindrical structural unit of compact bone is the:", opts: ["Trabecula", "Osteon (Haversian system)", "Canaliculus", "Lacuna"], a: 1, exp: "An osteon consists of concentric lamellar cylinders organized around a neurovascular central canal." },
+      { id: 56, q: "The longitudinal channel running through the center of an osteon containing blood vessels and nerve fibers is the:", opts: ["Perforating canal", "Central canal (Haversian canal)", "Canaliculus", "Medullary cavity"], a: 1, exp: "The central canal delivers neurovascular supplies along the longitudinal axis of each osteon." },
+      { id: 57, q: "Microscopic vascular channels that run perpendicular to the long bone axis connecting periosteal vessels to central canals are:", opts: ["Perforating canals (Volkmann's canals)", "Central canals", "Canaliculi", "Medullary clefts"], a: 0, exp: "Perforating canals deliver blood from the outer periosteum inward to Haversian systems." },
+      { id: 58, q: "Microscopic fluid-filled canals radiating between lacunae allowing osteocytes to communicate via gap junctions are:", opts: ["Canaliculi", "Lamellae", "Perforating canals", "Trabeculae"], a: 0, exp: "Canaliculi house osteocyte dendritic processes, enabling nutrient and gas exchange through calcified matrix." },
+      { id: 59, q: "The branching framework of microscopic bony plates and struts that compose cancellous (spongy) bone is called:", opts: ["Osteons", "Trabeculae", "Circumferential lamellae", "Sharpey's fibers"], a: 1, exp: "Spongy bone organizes into trabecular lattices aligned with biomechanical stress vectors." },
+      { id: 60, q: "The tubular compact bone shaft of a long bone surrounding the central marrow cavity is the:", opts: ["Epiphysis", "Diaphysis", "Metaphysis", "Apophysis"], a: 1, exp: "The diaphysis is the cylindrical bone shaft providing structural leverage." },
+      { id: 61, q: "The expanded proximal and distal ends of a long bone filled internally with spongy bone and red marrow are:", opts: ["Diaphyses", "Epiphyses", "Metaphyses", "Endostea"], a: 1, exp: "Epiphyses provide broadened joint contact areas capped with articular hyaline cartilage." },
+      { id: 62, q: "The double-layered dense irregular connective tissue membrane enveloping all exterior bone surfaces except joint surfaces is the:", opts: ["Endosteum", "Periosteum", "Perichondrium", "Synovium"], a: 1, exp: "The periosteum lines bone exteriors, providing an outer fibrous sheath and an inner osteogenic layer." },
+      { id: 63, q: "The delicate cellular membrane lining the medullary cavity, trabecular spaces, and central canals of bone is the:", opts: ["Periosteum", "Endosteum", "Perichondrium", "Fascia"], a: 1, exp: "The endosteum is an active osteogenic monolayer lining all internal bone surfaces." },
+      { id: 64, q: "Tough collagen bundles anchoring the fibrous periosteum firmly into the outer circumferential lamellae are:", opts: ["Sharpey's fibers (perforating fibers)", "Trabeculae", "Canaliculi", "Elastic cords"], a: 0, exp: "Perforating (Sharpey's) fibers fuse tendons, ligaments, and periosteum into cortical bone." },
+      { id: 65, q: "The primary mineral crystal component [Ca10(PO4)6(OH)2] of bone matrix that provides compressive hardness is:", opts: ["Osteoid collagen", "Hydroxyapatite", "Calcium carbonate", "Sodium chloride"], a: 1, exp: "Hydroxyapatite crystals precipitate onto collagen scaffolds to provide compressive rigidity." },
+      { id: 66, q: "The organic component of bone extracellular matrix secreted by osteoblasts consisting mainly of type I collagen is:", opts: ["Osteoid", "Hydroxyapatite", "Ground chondroitin", "Alkaline phosphatase"], a: 0, exp: "Osteoid constitutes about one-third of bone matrix, providing tensile flexibility that resists torsional snapping." },
+      { id: 67, q: "The embryonic process where flat cranial bones and the clavicles develop directly within mesenchymal fibrous sheets is:", opts: ["Endochondral ossification", "Intramembranous ossification", "Appositional growth", "Intercalated modeling"], a: 1, exp: "Intramembranous ossification bypasses a cartilage intermediate, converting mesenchyme straight to bone." },
+      { id: 68, q: "The embryonic developmental process where long bones form by replacing a pre-existing hyaline cartilage model is:", opts: ["Intramembranous ossification", "Endochondral ossification", "Metaplastic remodeling", "Sutural fusion"], a: 1, exp: "Endochondral ossification constructs the majority of the skeleton on hyaline cartilage scaffolds." },
+      { id: 69, q: "During endochondral ossification, the primary ossification center first establishes within the:", opts: ["Center of the diaphysis", "Proximal epiphysis", "Distal epiphysis", "Articular margin"], a: 0, exp: "The primary ossification center arises in the mid-diaphysis when a periosteal bud invades calcified cartilage." },
+      { id: 70, q: "Secondary ossification centers in endochondral bone formation develop postnatally within the:", opts: ["Diaphysis", "Epiphyses", "Medullary canal", "Periosteal collar"], a: 1, exp: "Secondary ossification centers form in the bulbous epiphyses after birth." },
+      { id: 71, q: "The hyaline cartilage plate located in the metaphysis that allows growing long bones to lengthen is the:", opts: ["Articular cartilage", "Epiphyseal plate (growth plate)", "Epiphyseal line", "Endosteal plate"], a: 1, exp: "The epiphyseal plate sustains longitudinal interstitial bone growth until late adolescence." },
+      { id: 72, q: "The process by which bones increase in diameter and cortical thickness beneath the subperiosteal layer is called:", opts: ["Endochondral elongation", "Appositional growth", "Interstitial elongation", "Mineral sequestration"], a: 1, exp: "Appositional growth deposits outer subperiosteal matrix while inner osteoclasts widen the marrow cavity." },
+      { id: 73, q: "Which hormone is secreted by the parathyroid glands during hypocalcemia to stimulate osteoclast bone resorption?", opts: ["Calcitonin", "Parathyroid hormone (PTH)", "Thyroxine", "Insulin"], a: 1, exp: "PTH stimulates osteoclast activity, increases renal calcium retention, and triggers calcitriol synthesis." },
+      { id: 74, q: "Which peptide hormone secreted by thyroid parafollicular (C) cells inhibits osteoclasts during hypercalcemia?", opts: ["Parathyroid hormone", "Calcitonin", "Calcitriol", "Growth hormone"], a: 1, exp: "Calcitonin acts antagonistically to PTH, temporarily suppressing osteoclasts when plasma calcium spikes." },
+      { id: 75, q: "The physiological rule stating that bone adapts, thickens, and models dynamically in response to mechanical loads is:", opts: ["Starling's law", "Wolff's law", "The sliding filament theory", "The Law of Laplace"], a: 1, exp: "Wolff's law explains how gravitational strain and muscle pull stimulate localized cortical thickening." },
+      { id: 76, q: "A bone fracture where broken osseous ends pierce through the cutaneous skin surface is classified as an:", opts: ["Closed fracture", "Open (compound) fracture", "Greenstick fracture", "Comminuted fracture"], a: 1, exp: "Open (compound) fractures tear through the skin, introducing major risks of microbial infection (osteomyelitis)." },
+      { id: 77, q: "A bone fracture that remains completely contained beneath intact skin is a:", opts: ["Open fracture", "Closed (simple) fracture", "Compound fracture", "Segmental fracture"], a: 1, exp: "Closed (simple) fractures break the bone cortex without penetrating the skin barrier." },
+      { id: 78, q: "The initial mass of clotted blood that forms around a bone break within hours of vascular rupture is a:", opts: ["Fibrocartilaginous callus", "Fracture hematoma", "Bony callus", "Granulation plate"], a: 1, exp: "Torn periosteal and Haversian vessels hemorrhage to form a fracture hematoma that triggers inflammation." },
+      { id: 79, q: "The repair tissue consisting of collagen and cartilage that bridges a bone break in stage two of fracture healing is the:", opts: ["Bony callus", "Soft (fibrocartilaginous) callus", "Hematoma", "Osteon bed"], a: 1, exp: "Fibroblasts and chondroblasts generate an internal and external soft callus to splint bone ends." },
+      { id: 80, q: "The repair structure formed by osteoblasts replacing fibrocartilage with spongy trabeculae during stage three of bone healing is the:", opts: ["Soft callus", "Hard (bony) callus", "Hematoma", "Primary ossicle"], a: 1, exp: "The hard (bony) callus mineralizes soft fibrocartilage into woven bone over 2 to 3 months." },
+      { id: 81, q: "A systemic metabolic bone disease where bone resorption outpaces deposition, producing brittle, porous bones, is:", opts: ["Osteomyelitis", "Osteoporosis", "Osteomalacia", "Achondroplasia"], a: 1, exp: "Osteoporosis depletes bone mineral density, predisposing elderly individuals to fragility fractures." },
+      { id: 82, q: "Pediatric softening and deformation of bones resulting from vitamin D or calcium deficiency is known as:", opts: ["Osteoporosis", "Rickets", "Paget's disease", "Osteosarcoma"], a: 1, exp: "Rickets prevents epiphyseal cartilage mineralization, leading to bowed legs and skeletal deformities." },
+      { id: 83, q: "The adult form of rickets caused by inadequate mineralization of newly formed osteoid matrix is:", opts: ["Osteoporosis", "Osteomalacia", "Osteoarthritis", "Achondroplasia"], a: 1, exp: "Osteomalacia causes soft, unmineralized osteoid buildup in adults, causing bone pain and fracture risk." },
+      { id: 84, q: "An incomplete pediatric fracture where one side of the bone cortex breaks while the opposite cortex bends is a:", opts: ["Comminuted fracture", "Greenstick fracture", "Spiral fracture", "Transverse fracture"], a: 1, exp: "Greenstick fractures occur in children whose flexible organic bone matrix bends on one side rather than snapping fully." },
+      { id: 85, q: "A high-impact fracture where the bone shatters into three or more distinct fragments is classified as:", opts: ["Greenstick fracture", "Comminuted fracture", "Impacted fracture", "Pott's fracture"], a: 1, exp: "Comminuted fractures result from heavy trauma and involve fragmentation into multiple bony pieces." },
+      { id: 86, q: "The hollow central cavity within a long bone diaphysis that stores yellow adipose marrow in adults is the:", opts: ["Central canal", "Medullary cavity", "Lacunar space", "Subperiosteal fossa"], a: 1, exp: "The medullary cavity minimizes skeletal weight while functioning as a lipid storage depot." },
+      { id: 87, q: "Hematopoiesis (blood cell production) occurs primarily within which skeletal tissue in adult flat bones and epiphyses?", opts: ["Yellow bone marrow", "Red bone marrow", "Articular cartilage", "Compact periosteum"], a: 1, exp: "Red bone marrow contains pluripotent hematopoietic stem cells that generate red blood cells, white blood cells, and platelets." },
+      { id: 88, q: "Fatty connective tissue found filling the medullary cavities of adult long bones is:", opts: ["Red bone marrow", "Yellow bone marrow", "Hyaline cartilage", "Endosteal stroma"], a: 1, exp: "Yellow marrow consists primarily of adipose tissue, which can revert to red marrow during severe hemolytic stress." },
+      { id: 89, q: "Incomplete rings of bone matrix located between intact osteons representing remnants of remodeled osteons are:", opts: ["Concentric lamellae", "Interstitial lamellae", "Circumferential lamellae", "Canaliculi"], a: 1, exp: "Interstitial lamellae are remnants of older osteons partially broken down during osteoclast remodeling." },
+      { id: 90, q: "Bony layers that encircle the entire outer and inner cortical perimeter of a long bone shaft are:", opts: ["Interstitial lamellae", "Circumferential lamellae", "Concentric lamellae", "Trabeculae"], a: 1, exp: "Circumferential lamellae extend completely around the bone shaft to resist rotational twisting." },
+      { id: 91, q: "The smooth cap of hyaline cartilage covering epiphyseal articulating ends to minimize friction and absorb joint shock is:", opts: ["Elastic cartilage", "Articular cartilage", "Fibrocartilage", "Costal cartilage"], a: 1, exp: "Articular cartilage cushions synovial joint articulations and lacks a vascular perichondrium." },
+      { id: 92, q: "The epiphyseal plate zone where chondrocytes undergo rapid mitotic proliferation, stacking up like plates, is the:", opts: ["Hypertrophic zone", "Proliferative zone", "Calcification zone", "Ossification zone"], a: 1, exp: "Cells in the proliferative zone rapidly divide to push the epiphysis away from the diaphysis, lengthening bone." },
+      { id: 93, q: "The epiphyseal plate zone where older chondrocytes swell, enlarge, and digest surrounding matrix is the:", opts: ["Proliferative zone", "Hypertrophic zone", "Ossification zone", "Reserve zone"], a: 1, exp: "In the hypertrophic zone, maturing chondrocytes hypertrophy and secrete alkaline phosphatase." },
+      { id: 94, q: "The epiphyseal plate zone where minerals precipitate, killing chondrocytes and leaving calcified cartilage spicules, is the:", opts: ["Reserve zone", "Calcification zone", "Proliferative zone", "Fibrous zone"], a: 1, exp: "Matrix calcifies in the calcification zone, depriving chondrocytes of nutrients and leading to cell death." },
+      { id: 95, q: "A fracture occurring across the hyaline growth plate that risks premature arrest of longitudinal growth in children is an:", opts: ["Greenstick fracture", "Epiphyseal plate fracture (Salter-Harris)", "Colles' fracture", "Pott's fracture"], a: 1, exp: "Epiphyseal fractures can permanently halt bone elongation if the mitotic chondrocyte pool is compromised." },
+      { id: 96, q: "The adult remnant line of dense bone tissue that marks where the epiphyseal cartilage plate fused after puberty is the:", opts: ["Epiphyseal line", "Metaphyseal suture", "Articular groove", "Haversian canal"], a: 0, exp: "The epiphyseal line marks the completed synostosis of the diaphysis and epiphysis." },
+      { id: 97, q: "The flared transitional neck region of a long bone between the diaphysis and epiphysis containing the growth plate is the:", opts: ["Apophysis", "Metaphysis", "Trochanter", "Condyle"], a: 1, exp: "The metaphysis transfers compressive biomechanical forces from wide articular epiphyses down to narrow diaphyses." },
+      { id: 98, q: "Bones embedded completely within tendons to modify pull angles and decrease friction (such as the patella) are classified as:", opts: ["Flat bones", "Sesamoid bones", "Sutural bones", "Irregular bones"], a: 1, exp: "Sesamoid bones develop inside tendons under mechanical friction to protect the tendon and improve mechanical leverage." },
+      { id: 99, q: "Small fluid-filled pockets within mineralized bone and cartilage matrix that house living osteocytes or chondrocytes are:", opts: ["Canaliculi", "Lacunae", "Volkmann canals", "Perforations"], a: 1, exp: "Osteocytes and chondrocytes occupy isolated lacunae within their surrounding dense matrices." },
+      { id: 100, q: "Which anterior thoracic bone articulates with the clavicles and costal cartilages of the true ribs?", opts: ["Scapula", "Sternum", "Hyoid", "Clavicle"], a: 1, exp: "The sternum (manubrium, body, xiphoid) anchors the anterior thoracic cage and true ribs." }
     ];
 
     /* ============================================================
-       PHYSIOLOGICAL ORDERING LAB DATA (5 CHALLENGES)
+       PHYSIOLOGICAL SEQUENCE DATA (5 CHALLENGES)
        ============================================================ */
-    const orderChallenges = [
+    const timelineChallenges = [
       {
         id: 1,
-        title: "Epidermal Strata (Deepest to Most Superficial in Thick Skin)",
-        steps: [
-          { text: "Stratum Basale (Mitotic stem cells dividing on the basement membrane)" },
-          { text: "Stratum Spinosum (Polyhedral cells bound by desmosomes with Langerhans cells)" },
-          { text: "Stratum Granulosum (Keratohyalin accumulation and lamellar lipid release)" },
-          { text: "Stratum Lucidum (Clear, flattened dead cell layer in thick skin)" },
-          { text: "Stratum Corneum (20–30 layers of dead, anucleate, desquamating squames)" }
+        title: "Epidermal Strata (Deepest to Superficial in Thick Skin)",
+        events: [
+          { text: "Stratum Basale (Mitotic stem cells anchored to basement membrane)" },
+          { text: "Stratum Spinosum (Polyhedral keratinocytes bound by desmosomes)" },
+          { text: "Stratum Granulosum (Keratohyalin accumulation and lipid secretion)" },
+          { text: "Stratum Lucidum (Clear flattened dead cells unique to thick skin)" },
+          { text: "Stratum Corneum (Dead cornified squames continuously sloughing)" }
         ],
-        rationale: "From deep to superficial, epidermal strata proceed: Basale → Spinosum → Granulosum → Lucidum → Corneum ('Come, Let's Get Sun Burned' inverted)."
+        rationale: "From deep to superficial: Basale → Spinosum → Granulosum → Lucidum → Corneum ('Come, Let's Get Sun Burned' inverted)."
       },
       {
         id: 2,
         title: "Endochondral Ossification Stages",
-        steps: [
+        events: [
           { text: "Hyaline cartilage model surrounded by perichondrium forms in embryo" },
-          { text: "Periosteal bone collar forms around diaphysis; central cartilage calcifies and develops cavities" },
-          { text: "Periosteal bud invades internal cavities, establishing the Primary Ossification Center" },
-          { text: "Diaphysis elongates, osteoclasts excavate medullary cavity; Secondary Ossification Centers form in epiphyses" },
-          { text: "Epiphyses ossify; hyaline cartilage remains only at epiphyseal plates and articular caps" }
+          { text: "Periosteal bone collar forms around diaphysis; central cartilage calcifies and cavitates" },
+          { text: "Periosteal bud invades cavity, establishing the Primary Ossification Center" },
+          { text: "Diaphysis elongates and excavates; Secondary Ossification Centers appear in epiphyses" },
+          { text: "Epiphyses ossify; hyaline cartilage remains only at growth plates and articular surfaces" }
         ],
-        rationale: "Endochondral ossification proceeds: hyaline model → bone collar with cavitation → periosteal bud invasion (primary center) → medullary cavity & epiphyseal secondary centers → persistence of epiphyseal plates."
+        rationale: "Stages: Hyaline model → Bone collar & cavitation → Primary center invasion → Medullary cavity & secondary epiphyseal centers → Articular/plate persistence."
       },
       {
         id: 3,
-        title: "Epiphyseal Growth Plate Zones (From Epiphysis toward Diaphysis)",
-        steps: [
+        title: "Epiphyseal Growth Plate Zones (Epiphysis toward Diaphysis)",
+        events: [
           { text: "Reserve (Resting) Zone: Small, inactive chondrocytes anchoring plate to epiphysis" },
-          { text: "Proliferative Zone: Rapidly dividing chondrocytes stacked in coin-like columns" },
-          { text: "Hypertrophic Zone: Older chondrocytes enlarge, lacunae expand" },
-          { text: "Calcification Zone: Surrounding matrix calcifies, chondrocytes die" },
-          { text: "Ossification (Osteogenic) Zone: Osteoblasts deposit woven bone over calcified spicules" }
+          { text: "Proliferative Zone: Rapidly dividing chondrocytes stacked in columns" },
+          { text: "Hypertrophic Zone: Maturing chondrocytes swell and enlarge lacunae" },
+          { text: "Calcification Zone: Surrounding matrix mineralizes; chondrocytes die" },
+          { text: "Ossification Zone: Osteoblasts deposit woven bone over calcified spicules" }
         ],
-        rationale: "Growth plate functional progression from epiphyseal side toward diaphysis: Resting Zone → Proliferative Zone → Hypertrophic Zone → Calcification Zone → Ossification Zone."
+        rationale: "Epiphyseal plate sequence from epiphysis toward diaphysis: Resting → Proliferative → Hypertrophic → Calcification → Ossification."
       },
       {
         id: 4,
         title: "Bone Fracture Repair Stages",
-        steps: [
-          { text: "Hematoma formation (Torn blood vessels hemorrhage, forming clot and initial inflammation)" },
-          { text: "Fibrocartilaginous (Soft) Callus formation (Capillaries invade, chondroblasts/fibroblasts span gap)" },
-          { text: "Bony (Hard) Callus formation (Osteoblasts convert fibrocartilage into trabecular woven bone)" },
-          { text: "Bone Remodeling (Osteoclasts and osteoblasts remodel woven bone into mature compact bone)" }
+        events: [
+          { text: "Fracture Hematoma formation (Torn blood vessels form clot and initial inflammation)" },
+          { text: "Fibrocartilaginous (Soft) Callus formation (Capillaries and collagen/cartilage span gap)" },
+          { text: "Bony (Hard) Callus formation (Osteoblasts convert fibrocartilage into trabecular bone)" },
+          { text: "Bone Remodeling (Osteoclasts and osteoblasts reconstruct compact cortex along stress lines)" }
         ],
-        rationale: "Bone repair order: Fracture hematoma (hours) → Fibrocartilaginous soft callus (days) → Bony hard callus (weeks) → Bone remodeling along stress lines (months)."
+        rationale: "Repair progression: Hematoma (hours) → Fibrocartilaginous soft callus (days) → Bony hard callus (weeks) → Cortical remodeling (months)."
       },
       {
         id: 5,
-        title: "Hypocalcemic Parathyroid Hormone (PTH) Homeostatic Response",
-        steps: [
-          { text: "Plasma ionic calcium levels fall below physiological homeostatic set point (< 9.0 mg/dL)" },
-          { text: "Chief cells in parathyroid glands detect hypocalcemia and release Parathyroid Hormone (PTH)" },
-          { text: "PTH activates osteoclasts to resorb bone mineral, releasing calcium into the bloodstream" },
-          { text: "PTH signals kidneys to conserve calcium and stimulates final calcitriol (vitamin D) activation" },
-          { text: "Calcitriol upregulates intestinal calcium absorption; plasma calcium restores to homeostatic baseline" }
+        title: "Hypocalcemic Parathyroid Hormone (PTH) Homeostatic Loop",
+        events: [
+          { text: "Plasma ionic calcium drops below physiological homeostatic set point (< 9.0 mg/dL)" },
+          { text: "Chief cells in parathyroid glands detect hypocalcemia and release PTH" },
+          { text: "PTH stimulates osteoclasts to resorb bone mineral, releasing calcium into blood" },
+          { text: "PTH prompts kidneys to reabsorb calcium and activates calcitriol (vitamin D3)" },
+          { text: "Calcitriol increases intestinal calcium absorption; plasma calcium restores to baseline" }
         ],
-        rationale: "Negative feedback order: stimulus (hypocalcemia) → sensor/integrator (parathyroids release PTH) → effectors (bone resorption + renal reabsorption) → intestinal absorption via calcitriol → restoration."
+        rationale: "Negative feedback: Stimulus (hypocalcemia) → Sensor (parathyroids) → Effectors (osteoclasts + renal tubules) → Calcitriol intestinal absorption → Normalization."
       }
     ];
 
     /* ============================================================
-       MATCHING LAB DATA
+       MATCHING LAB DATA (NO HAIR / NO NAILS)
        ============================================================ */
     const matchingItems = [
       { desc: "Multinucleated cells derived from monocytes that dissolve bone matrix with acid and enzymes", correct: "Osteoclasts" },
@@ -420,30 +419,30 @@
       { desc: "Large deep mechanoreceptor responding to deep cutaneous pressure and high-frequency vibration", correct: "Pacinian Corpuscle" },
       { desc: "Modified apocrine sweat glands lining the external acoustic canal that produce earwax", correct: "Ceruminous Glands" },
       { desc: "Mineral crystals [Ca10(PO4)6(OH)2] responsible for the compressive hardness of bone matrix", correct: "Hydroxyapatite" },
-      { desc: "Tough collagenous anchoring fibers that secure the periosteum into the outer circumferential lamellae", correct: "Sharpey's Fibers" }
+      { desc: "Tough collagenous anchoring fibers that secure the periosteum into outer circumferential lamellae", correct: "Sharpey's Fibers" }
     ];
 
     /* ============================================================
-       FLASHCARD DATA
+       FLASHCARD DATA (NO HAIR / NO NAILS)
        ============================================================ */
     const flashcards = [
-      { term: "Osteon (Haversian System)", def: "The structural unit of mature compact bone, composed of concentric lamellae surrounding a vascular central canal." },
-      { term: "Stratum Basale", def: "The deepest single layer of actively mitosing cuboidal/columnar stem cells resting on the basement membrane." },
+      { term: "Osteon (Haversian System)", def: "The cylindrical structural unit of compact bone composed of concentric lamellae surrounding a vascular central canal." },
+      { term: "Stratum Basale", def: "The deepest single layer of actively mitosing stem cells anchored to the basement membrane." },
       { term: "Wolff's Law", def: "Anatomical principle stating bone tissue remodels and thickens in direct adaptation to the mechanical stresses placed upon it." },
       { term: "Langerhans (Dendritic) Cell", def: "Antigen-presenting macrophage residing in the stratum spinosum to initiate cutaneous immune responses." },
-      { term: "Endochondral Ossification", def: "The process of long bone formation where a pre-existing hyaline cartilage model is broken down and replaced by bone." },
-      { term: "Sebaceous Gland", def: "Exocrine gland using holocrine lysis to secrete lipid-rich sebum onto hair follicles for lubrication and antibacterial defense." },
-      { term: "Epiphyseal Plate", def: "A hyaline cartilage plate in the metaphysis that allows growing long bones to lengthen via interstitial cartilage division." },
+      { term: "Endochondral Ossification", def: "The developmental process where long bones form by replacing a pre-existing hyaline cartilage model." },
+      { term: "Sebaceous Gland", def: "Exocrine gland using holocrine lysis to secrete lipid-rich sebum onto the skin for lubrication and antibacterial defense." },
+      { term: "Epiphyseal Plate", def: "Hyaline cartilage plate located in the metaphysis that allows growing long bones to lengthen via interstitial division." },
       { term: "Parathyroid Hormone (PTH)", def: "Hormone secreted in response to hypocalcemia that upregulates osteoclastic bone resorption to raise blood calcium." },
       { term: "Acid Mantle", def: "Low-pH (4.5–5.5) chemical surface film created by sweat and sebum that retards bacterial multiplication on the skin." },
       { term: "Trabeculae", def: "Lattice-like bony struts and plates that align precisely with stress lines in cancellous (spongy) bone." }
     ];
 
     /* ============================================================
-       PERSISTENT STATE ENGINE (2 CONSECUTIVE PASSES TO MASTER)
+       STATE & LOCAL STORAGE LOGIC (2 CONSECUTIVE PASSES TO MASTER)
        ============================================================ */
-    const STORAGE_KEY = 'AP1_CH5_CH6_NO_MCQ_ARCADE_V1';
-    let arcadeData = { recall: {}, order: {} };
+    const STORAGE_KEY = 'AP1_CH5_CH6_100MCQ_ARCADE_V1';
+    let arcadeData = { chrono: {}, quiz: {} };
 
     function loadStore() {
       try {
@@ -452,11 +451,11 @@
       } catch (e) {
         console.warn("Storage restricted", e);
       }
-      if (!arcadeData.recall) arcadeData.recall = {};
-      if (!arcadeData.order) arcadeData.order = {};
+      if (!arcadeData.chrono) arcadeData.chrono = {};
+      if (!arcadeData.quiz) arcadeData.quiz = {};
 
-      recallBank.forEach(q => { if (typeof arcadeData.recall[q.id] !== 'number') arcadeData.recall[q.id] = 0; });
-      orderChallenges.forEach(c => { if (typeof arcadeData.order[c.id] !== 'number') arcadeData.order[c.id] = 0; });
+      timelineChallenges.forEach(c => { if (typeof arcadeData.chrono[c.id] !== 'number') arcadeData.chrono[c.id] = 0; });
+      quizQuestions.forEach(q => { if (typeof arcadeData.quiz[q.id] !== 'number') arcadeData.quiz[q.id] = 0; });
       updateAllProgressBars();
     }
 
@@ -467,35 +466,35 @@
       updateAllProgressBars();
     }
 
-    function resetEngineProgress() {
-      if (confirm("Reset all stored mastery data for Integumentary & Skeletal systems?")) {
-        arcadeData = { recall: {}, order: {} };
+    function resetQuizProgress() {
+      if (confirm("Reset all quiz and sequence mastery for Integument & Skeletal systems?")) {
+        arcadeData = { chrono: {}, quiz: {} };
         saveStore();
-        startRecallRound();
-        startOrderRound();
+        startQuizRound();
+        startChronologyRound();
       }
     }
 
     function updateAllProgressBars() {
-      // Active Recall Engine
-      let rMaster = 0;
-      recallBank.forEach(q => { if ((arcadeData.recall[q.id] || 0) >= 2) rMaster++; });
-      const rPct = Math.round((rMaster / recallBank.length) * 100);
-      document.getElementById('recallFill').style.width = `${rPct}%`;
-      document.getElementById('recallMasteredText').textContent = `Mastered: ${rMaster} / ${recallBank.length}`;
-      document.getElementById('recallPctText').textContent = `${rPct}% Mastered`;
+      // Quiz
+      let qMaster = 0;
+      quizQuestions.forEach(q => { if ((arcadeData.quiz[q.id] || 0) >= 2) qMaster++; });
+      const qPct = Math.round((qMaster / quizQuestions.length) * 100);
+      document.getElementById('quizFill').style.width = `${qPct}%`;
+      document.getElementById('quizMasteredText').textContent = `Mastered: ${qMaster} / ${quizQuestions.length}`;
+      document.getElementById('quizPctText').textContent = `${qPct}% Mastered`;
 
-      // Ordering Lab
-      let oMaster = 0;
-      orderChallenges.forEach(c => { if ((arcadeData.order[c.id] || 0) >= 2) oMaster++; });
-      const oPct = Math.round((oMaster / orderChallenges.length) * 100);
-      document.getElementById('orderFill').style.width = `${oPct}%`;
-      document.getElementById('orderMasteredText').textContent = `Mastered: ${oMaster} / ${orderChallenges.length}`;
-      document.getElementById('orderPctText').textContent = `${oPct}% Mastered`;
+      // Chrono / Sequence
+      let cMaster = 0;
+      timelineChallenges.forEach(c => { if ((arcadeData.chrono[c.id] || 0) >= 2) cMaster++; });
+      const cPct = Math.round((cMaster / timelineChallenges.length) * 100);
+      document.getElementById('chronoFill').style.width = `${cPct}%`;
+      document.getElementById('chronoMasteredText').textContent = `Mastered: ${cMaster} / ${timelineChallenges.length}`;
+      document.getElementById('chronoPctText').textContent = `${cPct}% Mastered`;
     }
 
     function switchMode(mode) {
-      ['recall', 'order', 'match', 'cards'].forEach(m => {
+      ['quiz', 'chrono', 'match', 'cards'].forEach(m => {
         document.getElementById(`panel-${m}`).classList.remove('active');
         document.getElementById(`tab-${m}`).setAttribute('aria-selected', 'false');
       });
@@ -504,167 +503,163 @@
     }
 
     /* ============================================================
-       MODULE 1: ACTIVE RECALL (100 POOL, 10 PER ROUND, NO MCQ)
+       MODULE 1: 100 MULTIPLE CHOICE QUIZ (10 PER BURST)
        ============================================================ */
-    let rPool = [], rIdx = 0, rCorrect = 0;
+    let qPool = [], qIdx = 0, qCorrect = 0;
 
-    function startRecallRound() {
+    function startQuizRound() {
       const shuffle = arr => arr.slice().sort(() => Math.random() - 0.5);
-      const unmastered = recallBank.filter(q => (arcadeData.recall[q.id] || 0) < 2);
+      const unmastered = quizQuestions.filter(q => (arcadeData.quiz[q.id] || 0) < 2);
       if (unmastered.length >= 10) {
-        rPool = shuffle(unmastered).slice(0, 10);
+        qPool = shuffle(unmastered).slice(0, 10);
       } else if (unmastered.length > 0) {
-        const rem = recallBank.filter(q => (arcadeData.recall[q.id] || 0) >= 2);
-        rPool = shuffle(unmastered).concat(shuffle(rem).slice(0, 10 - unmastered.length));
+        const rem = quizQuestions.filter(q => (arcadeData.quiz[q.id] || 0) >= 2);
+        qPool = shuffle(unmastered).concat(shuffle(rem).slice(0, 10 - unmastered.length));
       } else {
-        rPool = shuffle(recallBank).slice(0, 10);
+        qPool = shuffle(quizQuestions).slice(0, 10);
       }
 
-      rIdx = 0; rCorrect = 0;
-      document.getElementById('recallActiveCard').style.display = 'block';
-      document.getElementById('recallCompleteCard').style.display = 'none';
-      renderRecallQuestion();
+      qIdx = 0; qCorrect = 0;
+      document.getElementById('quizActiveCard').style.display = 'block';
+      document.getElementById('quizCompleteCard').style.display = 'none';
+      renderQuizQuestion();
     }
 
-    function renderRecallQuestion() {
-      const q = rPool[rIdx];
-      const lvl = arcadeData.recall[q.id] || 0;
-      document.getElementById('recallRoundTag').textContent = `Prompt ${rIdx + 1} of 10`;
-      document.getElementById('recallBadge').textContent = `Mastery: ${lvl}/2 ${lvl >= 2 ? '★' : ''}`;
-      document.getElementById('recallPrompt').textContent = q.prompt;
+    function renderQuizQuestion() {
+      const q = qPool[qIdx];
+      const lvl = arcadeData.quiz[q.id] || 0;
+      document.getElementById('quizRoundTag').textContent = `Question ${qIdx + 1} of 10`;
+      document.getElementById('quizBadge').textContent = `Mastery: ${lvl}/2 ${lvl >= 2 ? '★' : ''}`;
+      document.getElementById('quizPrompt').textContent = q.q;
 
-      const input = document.getElementById('recallInput');
-      input.value = '';
-      input.disabled = false;
-      input.focus();
+      const opts = document.getElementById('quizOpts');
+      opts.innerHTML = '';
+      document.getElementById('quizFeedback').className = 'feedback-box';
+      document.getElementById('quizFeedback').textContent = '';
+      document.getElementById('quizNextBtn').style.display = 'none';
 
-      document.getElementById('recallFeedback').className = 'feedback-box';
-      document.getElementById('recallFeedback').textContent = '';
-      document.getElementById('recallSubmitBtn').style.display = 'inline-block';
-      document.getElementById('recallNextBtn').style.display = 'none';
+      q.opts.forEach((text, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.textContent = `${String.fromCharCode(65 + i)}. ${text}`;
+        btn.onclick = () => handleQuizPick(i, btn);
+        opts.appendChild(btn);
+      });
     }
 
-    function cleanString(str) {
-      return str.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
-    }
+    function handleQuizPick(picked, clickedBtn) {
+      const q = qPool[qIdx];
+      const buttons = document.querySelectorAll('.opt-btn');
+      const fb = document.getElementById('quizFeedback');
+      buttons.forEach(b => b.disabled = true);
 
-    function handleRecallSubmit(e) {
-      e.preventDefault();
-      const q = rPool[rIdx];
-      const input = document.getElementById('recallInput');
-      const val = cleanString(input.value);
-      if (!val) return;
-
-      input.disabled = true;
-      const isCorrect = q.ans.some(accepted => cleanString(accepted) === val);
-      const fb = document.getElementById('recallFeedback');
-
-      document.getElementById('recallSubmitBtn').style.display = 'none';
-      document.getElementById('recallNextBtn').style.display = 'inline-block';
-
-      if (isCorrect) {
-        rCorrect++;
+      if (picked === q.a) {
+        clickedBtn.classList.add('correct');
         fb.className = 'feedback-box show pass';
-        fb.innerHTML = `<strong>✓ Correct!</strong> Key Term: <em>${q.ans[0]}</em>. ${q.expl}`;
-        if (!arcadeData.recall[q.id]) arcadeData.recall[q.id] = 0;
-        if (arcadeData.recall[q.id] < 2) arcadeData.recall[q.id]++;
+        fb.innerHTML = `<strong>✓ Correct!</strong> ${q.exp}`;
+        qCorrect++;
+        if (!arcadeData.quiz[q.id]) arcadeData.quiz[q.id] = 0;
+        if (arcadeData.quiz[q.id] < 2) arcadeData.quiz[q.id]++;
       } else {
+        clickedBtn.classList.add('incorrect');
+        buttons[q.a].classList.add('correct');
         fb.className = 'feedback-box show fail';
-        fb.innerHTML = `<strong>✗ Incorrect.</strong> Accepted Term: <strong>${q.ans[0]}</strong>. ${q.expl}`;
-        arcadeData.recall[q.id] = 0;
+        fb.innerHTML = `<strong>✗ Incorrect.</strong> ${q.exp}`;
+        arcadeData.quiz[q.id] = 0;
       }
       saveStore();
+      document.getElementById('quizNextBtn').style.display = 'inline-block';
     }
 
-    function nextRecallQuestion() {
-      rIdx++;
-      if (rIdx < 10) renderRecallQuestion();
+    function nextQuizQuestion() {
+      qIdx++;
+      if (qIdx < 10) renderQuizQuestion();
       else {
-        document.getElementById('recallActiveCard').style.display = 'none';
-        document.getElementById('recallCompleteCard').style.display = 'block';
-        document.getElementById('recallRoundScore').textContent = `${rCorrect} / 10`;
-        document.getElementById('recallRoundMsg').textContent = rCorrect >= 8 ? "Excellent recall! Terminology is cementing." : "Review terms you missed; repetition builds mastery.";
+        document.getElementById('quizActiveCard').style.display = 'none';
+        document.getElementById('quizCompleteCard').style.display = 'block';
+        document.getElementById('quizRoundScore').textContent = `${qCorrect} / 10`;
+        document.getElementById('quizRoundMsg').textContent = qCorrect >= 8 ? "Outstanding accuracy! Concepts are cementing." : "Keep cycling through to lock in the tricky pathways.";
       }
     }
 
     /* ============================================================
-       MODULE 2: PHYSIOLOGICAL ORDERING LAB
+       MODULE 2: PHYSIOLOGICAL SEQUENCE
        ============================================================ */
-    let oPool = [], oIdx = 0, oCorrect = 0, activeOrderItems = [];
+    let cPool = [], cIdx = 0, cCorrect = 0, activeTimelineItems = [];
 
-    function startOrderRound() {
+    function startChronologyRound() {
       const shuffle = arr => arr.slice().sort(() => Math.random() - 0.5);
-      const unmastered = orderChallenges.filter(c => (arcadeData.order[c.id] || 0) < 2);
+      const unmastered = timelineChallenges.filter(c => (arcadeData.chrono[c.id] || 0) < 2);
       if (unmastered.length >= 5) {
-        oPool = shuffle(unmastered).slice(0, 5);
+        cPool = shuffle(unmastered).slice(0, 5);
       } else if (unmastered.length > 0) {
-        const rem = orderChallenges.filter(c => (arcadeData.order[c.id] || 0) >= 2);
-        oPool = shuffle(unmastered).concat(shuffle(rem).slice(0, 5 - unmastered.length));
+        const rem = timelineChallenges.filter(c => (arcadeData.chrono[c.id] || 0) >= 2);
+        cPool = shuffle(unmastered).concat(shuffle(rem).slice(0, 5 - unmastered.length));
       } else {
-        oPool = shuffle(orderChallenges).slice(0, 5);
+        cPool = shuffle(timelineChallenges).slice(0, 5);
       }
 
-      oIdx = 0; oCorrect = 0;
-      document.getElementById('orderActiveCard').style.display = 'block';
-      document.getElementById('orderCompleteCard').style.display = 'none';
-      renderOrderChallenge();
+      cIdx = 0; cCorrect = 0;
+      document.getElementById('chronoActiveCard').style.display = 'block';
+      document.getElementById('chronoCompleteCard').style.display = 'none';
+      renderChronologyChallenge();
     }
 
-    function renderOrderChallenge() {
-      const ch = oPool[oIdx];
-      const lvl = arcadeData.order[ch.id] || 0;
-      document.getElementById('orderRoundTag').textContent = `Challenge ${oIdx + 1} of 5`;
-      document.getElementById('orderBadge').textContent = `Mastery: ${lvl}/2 ${lvl >= 2 ? '★' : ''}`;
-      document.getElementById('orderPrompt').textContent = `Arrange physiological sequence from start (top) to end (bottom) — [${ch.title}]:`;
+    function renderChronologyChallenge() {
+      const ch = cPool[cIdx];
+      const lvl = arcadeData.chrono[ch.id] || 0;
+      document.getElementById('chronoRoundTag').textContent = `Challenge ${cIdx + 1} of 5`;
+      document.getElementById('chronoBadge').textContent = `Mastery: ${lvl}/2 ${lvl >= 2 ? '★' : ''}`;
+      document.getElementById('chronoPrompt').textContent = `Arrange physiological sequence from start (top) to end (bottom) — [${ch.title}]:`;
 
-      activeOrderItems = ch.steps.map((s, i) => ({ ...s, orig: i })).sort(() => Math.random() - 0.5);
-      document.getElementById('orderFeedback').className = 'feedback-box';
-      document.getElementById('orderFeedback').textContent = '';
-      document.getElementById('orderSubmitBtn').style.display = 'inline-block';
-      document.getElementById('orderNextBtn').style.display = 'none';
+      activeTimelineItems = ch.events.map((e, i) => ({ ...e, orig: i })).sort(() => Math.random() - 0.5);
+      document.getElementById('chronoFeedback').className = 'feedback-box';
+      document.getElementById('chronoFeedback').textContent = '';
+      document.getElementById('chronoSubmitBtn').style.display = 'inline-block';
+      document.getElementById('chronoNextBtn').style.display = 'none';
 
-      drawOrderItems(false);
+      drawChronologyItems(false);
     }
 
-    function drawOrderItems(isLocked) {
-      const ul = document.getElementById('orderList');
+    function drawChronologyItems(isLocked) {
+      const ul = document.getElementById('chronoTimeline');
       ul.innerHTML = '';
-      activeOrderItems.forEach((item, idx) => {
+      activeTimelineItems.forEach((item, idx) => {
         const li = document.createElement('li');
-        li.className = 'sequence-item';
-        li.id = `oitem-${idx}`;
+        li.className = 'timeline-item';
+        li.id = `titem-${idx}`;
 
         const content = document.createElement('div');
         content.className = 'item-content';
-        content.innerHTML = `<span class="pos-index">${idx + 1}.</span> <span class="step-label">${item.text}</span>`;
+        content.innerHTML = `<span class="pos-index">${idx + 1}.</span> <span class="event-label">${item.text}</span>`;
         li.appendChild(content);
 
         const btnGroup = document.createElement('div');
         btnGroup.className = 'btn-shift-group';
         btnGroup.innerHTML = `
-          <button class="btn-shift" onclick="shiftOrder(${idx}, -1)" ${isLocked || idx === 0 ? 'disabled' : ''}>▲</button>
-          <button class="btn-shift" onclick="shiftOrder(${idx}, 1)" ${isLocked || idx === activeOrderItems.length - 1 ? 'disabled' : ''}>▼</button>
+          <button class="btn-shift" onclick="shiftChronology(${idx}, -1)" ${isLocked || idx === 0 ? 'disabled' : ''}>▲</button>
+          <button class="btn-shift" onclick="shiftChronology(${idx}, 1)" ${isLocked || idx === activeTimelineItems.length - 1 ? 'disabled' : ''}>▼</button>
         `;
         li.appendChild(btnGroup);
         ul.appendChild(li);
       });
     }
 
-    function shiftOrder(index, dir) {
+    function shiftChronology(index, dir) {
       const target = index + dir;
-      if (target < 0 || target >= activeOrderItems.length) return;
-      const tmp = activeOrderItems[index];
-      activeOrderItems[index] = activeOrderItems[target];
-      activeOrderItems[target] = tmp;
-      drawOrderItems(false);
+      if (target < 0 || target >= activeTimelineItems.length) return;
+      const tmp = activeTimelineItems[index];
+      activeTimelineItems[index] = activeTimelineItems[target];
+      activeTimelineItems[target] = tmp;
+      drawChronologyItems(false);
     }
 
-    function checkOrderSequence() {
-      const ch = oPool[oIdx];
+    function checkChronology() {
+      const ch = cPool[cIdx];
       let perfect = true;
 
-      activeOrderItems.forEach((item, i) => {
-        const el = document.getElementById(`oitem-${i}`);
+      activeTimelineItems.forEach((item, i) => {
+        const el = document.getElementById(`titem-${i}`);
         if (item.orig === i) {
           el.classList.add('correct');
         } else {
@@ -673,33 +668,33 @@
         }
       });
 
-      drawOrderItems(true);
-      const fb = document.getElementById('orderFeedback');
-      document.getElementById('orderSubmitBtn').style.display = 'none';
-      document.getElementById('orderNextBtn').style.display = 'inline-block';
+      drawChronologyItems(true);
+      const fb = document.getElementById('chronoFeedback');
+      document.getElementById('chronoSubmitBtn').style.display = 'none';
+      document.getElementById('chronoNextBtn').style.display = 'inline-block';
 
       if (perfect) {
-        oCorrect++;
+        cCorrect++;
         fb.className = 'feedback-box show pass';
         fb.innerHTML = `<strong>✓ Perfect Sequence!</strong> ${ch.rationale}`;
-        if (!arcadeData.order[ch.id]) arcadeData.order[ch.id] = 0;
-        if (arcadeData.order[ch.id] < 2) arcadeData.order[ch.id]++;
+        if (!arcadeData.chrono[ch.id]) arcadeData.chrono[ch.id] = 0;
+        if (arcadeData.chrono[ch.id] < 2) arcadeData.chrono[ch.id]++;
       } else {
         fb.className = 'feedback-box show fail';
-        fb.innerHTML = `<strong>✗ Sequence Error.</strong> Check red-flagged steps above. ${ch.rationale}`;
-        arcadeData.order[ch.id] = 0;
+        fb.innerHTML = `<strong>✗ Out of Sequence.</strong> Check red-flagged steps above. ${ch.rationale}`;
+        arcadeData.chrono[ch.id] = 0;
       }
       saveStore();
     }
 
-    function nextOrderChallenge() {
-      oIdx++;
-      if (oIdx < 5) renderOrderChallenge();
+    function nextChronology() {
+      cIdx++;
+      if (cIdx < 5) renderChronologyChallenge();
       else {
-        document.getElementById('orderActiveCard').style.display = 'none';
-        document.getElementById('orderCompleteCard').style.display = 'block';
-        document.getElementById('orderRoundScore').textContent = `${oCorrect} / 5`;
-        document.getElementById('orderRoundMsg').textContent = oCorrect >= 4 ? "Solid process mastery!" : "Review biological pathways and try the round again.";
+        document.getElementById('chronoActiveCard').style.display = 'none';
+        document.getElementById('chronoCompleteCard').style.display = 'block';
+        document.getElementById('chronoRoundScore').textContent = `${cCorrect} / 5`;
+        document.getElementById('chronoRoundMsg').textContent = cCorrect >= 4 ? "Impressive pathway comprehension!" : "Review biological steps and run the set again.";
       }
     }
 
@@ -765,11 +760,11 @@
     }
 
     /* ============================================================
-       INIT
+       INITIALIZATION
        ============================================================ */
     loadStore();
-    startRecallRound();
-    startOrderRound();
+    startQuizRound();
+    startChronologyRound();
     buildMatching();
     renderFlashcard();
   </script>
